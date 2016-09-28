@@ -1,0 +1,108 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.eil.eilpulisher.MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="url" />
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+    </LinearLayout>
+
+      <TextView
+         android:id="@+id/textView2"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/linearLayout1"
+         android:layout_below="@+id/linearLayout1"
+         android:layout_marginTop="20dp"
+         android:text="清晰度" />
+     <RadioGroup
+         android:id="@+id/radioGroup2"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="100dp"
+         android:layout_marginLeft="30dp"
+         android:contentDescription="清晰度" >
+
+         <RadioButton
+             android:id="@+id/radio480"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:checked="true"
+             android:text="标清" />
+
+         <RadioButton
+             android:id="@+id/radio540"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="高清" />
+
+         <RadioButton
+             android:id="@+id/radio720"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="超清" />
+     </RadioGroup>
+     
+      <RadioGroup 
+            android:id="@+id/radioGroup"
+            android:contentDescription="编码方式" 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_marginTop="250dp"
+         	android:layout_marginLeft="30dp">
+     	<RadioButton
+     	    android:layout_width="wrap_content"
+     	    android:layout_height="wrap_content" 
+     	    android:id="@+id/radioSW" 
+     	    android:text="软编码" >     	    
+     	</RadioButton>
+    	<RadioButton 
+    	    android:layout_width="wrap_content" 
+    	    android:layout_height="wrap_content" 
+    	    android:id="@+id/radioHW" 
+    	    android:text="硬编码"
+    	    android:checked="true">    	    
+    	</RadioButton>    
+  		</RadioGroup>
+
+   
+     <Button
+         android:id="@+id/btn_ok"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_centerHorizontal="true"
+         android:layout_marginBottom="19dp"
+         android:text="ok" />
+
+     <TextView
+         android:id="@+id/textView3"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/textView2"
+         android:layout_below="@+id/radioGroup2"
+         android:layout_marginTop="26dp"
+         android:text="编码方式" />
+</RelativeLayout>
