@@ -84,6 +84,8 @@ SurfaceView mSurfaceView=(SurfaceView)findViewById(R.id.surfaceView);
 推流过程中不可动态改变的参数需要在创建该类的对象时指定。
 ````java
 LivePushConfig mLivePushConfig = new LivePushConfig();
+//设置推流APP context
+mLivePushConfig.setAppContext(this);
 // 设置推流url
 mLivePushConfig.setRtmpUrl("rtmp://test.uplive.xxx.com/live/{streamName}");
 // 设置推流分辨率,需要手机支持的分辨率，sdk内部会进行判断，如果设置的分辨率手机不支持，会无法推流

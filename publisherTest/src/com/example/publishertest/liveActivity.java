@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.media.AudioFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class liveActivity extends Activity implements OnClickListener{
 
@@ -41,6 +43,7 @@ public class liveActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//隐藏标题
 		setContentView(R.layout.activity_live);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 				
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
@@ -49,6 +52,7 @@ public class liveActivity extends Activity implements OnClickListener{
 		mBtnStartLive.setOnClickListener(this);
 		mBtnStopLive = (Button) findViewById(R.id.btn_stop);
 		mBtnStopLive.setOnClickListener(this);
+		mBtnStopLive.setEnabled(false);
 		mBtnSwitchCam = (Button) findViewById(R.id.btn_switch);
 		mBtnSwitchCam.setOnClickListener(this);
 		
@@ -57,10 +61,42 @@ public class liveActivity extends Activity implements OnClickListener{
 		mSurfaceView=(SurfaceView)findViewById(R.id.surfaceView);
 		LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
 		
-		mHandler = new Handler(); 
+		mHandler=new Handler()
+        {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
+                    	showMessage("连接失败，等待重连");
+                   	 	updateUI(false);
+                        break;
+                    case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL:
+                    	updateUI(false);
+                        showMessage("音频采集编码线程启动失败");
+                        break;
+                    case LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL:
+                    	updateUI(false);
+                        showMessage("视频采集编码线程启动失败");
+                        break;
+                    case LiveConstants.PUSH_EVT_CONNECT_SUCC: 
+                    	showMessage("连接成功");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        };
 		mRunnable = new Runnable() {
             public void run() {
             	 Log.i(TAG, "LiveEventInterface disconnect and reconnect init"); 
+            	 try {
+					   	Thread.sleep(8000);
+					 } catch (InterruptedException e) {
+						 // TODO Auto-generated catch block
+						 e.printStackTrace();
+					 }
 				 LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
 				 int ret = LiveInterface.getInstance().start(); 
 				 if(ret < 0 )
@@ -68,6 +104,7 @@ public class liveActivity extends Activity implements OnClickListener{
 					 Log.i(TAG, "LiveEventInterface disconnect and reconnect start");
 					 back();						   
 				 } 
+				 updateUI(true);
              }
         };
 	}
@@ -102,7 +139,8 @@ public class liveActivity extends Activity implements OnClickListener{
 			 {
 				 Log.i(TAG, "connect failed"); 
 				 back();
-			 }			      	 
+			 }
+			 updateUI(true);
              break;
          case R.id.btn_stop:
         	 LiveInterface.getInstance().stop();
@@ -114,34 +152,57 @@ public class liveActivity extends Activity implements OnClickListener{
 		 }
 	}
 	
+	private void showMessage(String message)
+	{
+		 Toast toast = Toast.makeText(liveActivity.this, 
+				 message,                     
+                 Toast.LENGTH_SHORT);                  
+		  	 toast.show();
+	}
+	
+	private void updateUI(boolean state)
+	{
+		if(state)
+		{
+			mBtnStartLive.setEnabled(false);
+			mBtnStopLive.setEnabled(true);
+		}else
+		{
+			mBtnStartLive.setEnabled(true);
+			mBtnStopLive.setEnabled(false);
+		}
+	}
+	
 	private LiveEventInterface mCaptureStateListener = new LiveEventInterface() {
         @Override
         public void onStateChanged(int eventId) {
- 
+        	Message msg =new Message();
+        	
             switch (eventId) {
                 case LiveConstants.PUSH_ERR_NET_DISCONNECT://断线
                 case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL://连接失败
                 	 Log.i(TAG, "LiveEventInterface disconnect and reconnect"); 
+                	 msg.what = LiveConstants.PUSH_ERR_NET_CONNECT_FAIL;
+                	 mHandler.sendMessage(msg);
                 	 //LiveInterface.getInstance().stop();
                 	 //重连
-					 try {
-					   	Thread.sleep(8000);
-					 } catch (InterruptedException e) {
-						 // TODO Auto-generated catch block
-						 e.printStackTrace();
-					 }
 					 mHandler.post(mRunnable);
+					
 	                 break;
                 case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL://音频采集编码线程启动失败
                     Log.i(TAG, "LiveEventInterface audio encoder failed");
-                   
+                    msg.what = LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL;
+               	 	mHandler.sendMessage(msg);
                     break;
                 case LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL://视频采集编码线程启动失败
                     Log.i(TAG, "LiveEventInterface video encoder failed");
-                   
+                    msg.what = LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL;
+               	 	mHandler.sendMessage(msg);
                     break;
                 case LiveConstants.PUSH_EVT_CONNECT_SUCC: //连接成功
                 	Log.i(TAG, "LiveEventInterface connect ok");
+                	msg.what = LiveConstants.PUSH_EVT_CONNECT_SUCC;
+                	mHandler.sendMessage(msg);
                     break;
             }
         }
@@ -151,6 +212,7 @@ public class liveActivity extends Activity implements OnClickListener{
 	{
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
+		mLivePushConfig.setAppContext(this);
 		mLivePushConfig.setAudioChannels(AudioFormat.CHANNEL_IN_MONO);
 		mLivePushConfig.setAudioSampleRate(44100);
 		if(0 == mEncodeMode)

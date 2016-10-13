@@ -1,0 +1,10 @@
+publisherTest版本日志
+
+v0.1    2016-09-28
+1、集成EIL_publisher_android SDK 0.1版本；
+
+v0.1a    2016-10-13
+1、集成EIL_publisher_android SDK 0.1a版本；
+2、修复推流后长时间不操作自动锁屏问题；
+3、增加推流状态消息通知；
+4、界面操作优化。
