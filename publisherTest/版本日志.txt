@@ -11,3 +11,6 @@ v0.1a    2016-10-13
 
 v0.1b    2016-10-14
 1、集成EIL_publisher_android SDK 0.1b版本；
+
+v0.2    2016-11-01
+1、集成EIL_publisher_android SDK 0.2版本；

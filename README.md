@@ -127,7 +127,7 @@ private LiveEventInterface mCaptureStateListener = new LiveEventInterface() {
     };
 
 ````
--------- 初始化推流
+-------- 初始化推流，开启摄像头
 ````java
  LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
 ````
@@ -135,6 +135,10 @@ private LiveEventInterface mCaptureStateListener = new LiveEventInterface() {
 **注意：请在初始化推流成功后调用**
 ````java
 LiveInterface.getInstance().start();   
+````
+//动态修改推流地址
+````java
+LiveInterface.getInstance().start(mRtmpUrl);   
 ````
 -------- 推流过程中可动态设置的常用方法
 ````java
@@ -146,5 +150,9 @@ LiveInterface.getInstance().switchCamera();
 LiveInterface.getInstance().getUploadRate();
 ````
 -------- 停止推流
+````java
+LiveInterface.getInstance().stop();
+````
+-------- 关闭摄像头，释放资源
 ````java
 LiveInterface.getInstance().stop();

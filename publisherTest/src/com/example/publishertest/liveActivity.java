@@ -1,6 +1,5 @@
 package com.example.publishertest;
 
-
 import com.eil.eilpublisher.interfaces.LiveEventInterface;
 import com.eil.eilpublisher.interfaces.LiveInterface;
 import com.eil.eilpublisher.liveConstants.LiveConstants;
@@ -97,14 +96,15 @@ public class liveActivity extends Activity implements OnClickListener{
 						 // TODO Auto-generated catch block
 						 e.printStackTrace();
 					 }
-				 LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
 				 int ret = LiveInterface.getInstance().start(); 
 				 if(ret < 0 )
 				 {
-					 Log.i(TAG, "LiveEventInterface disconnect and reconnect start");
-					 back();						   
-				 } 
-				 updateUI(true);
+					 Log.i(TAG, "reconnect start failed");
+					 updateUI(false);					   
+				 }else
+				 {
+					 updateUI(true);
+				 }
              }
         };
 	}
@@ -120,6 +120,7 @@ public class liveActivity extends Activity implements OnClickListener{
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		LiveInterface.getInstance().uninit();
 	}
 
 	@Override
@@ -137,14 +138,16 @@ public class liveActivity extends Activity implements OnClickListener{
 			 int ret = LiveInterface.getInstance().start();   
 			 if(ret < 0)
 			 {
-				 Log.i(TAG, "connect failed"); 
-				 back();
+				 Log.i(TAG, "connect failed");
+				 showMessage("Á¬½ÓÊ§°Ü");
+				 updateUI(false);
+				 break;
 			 }
 			 updateUI(true);
              break;
          case R.id.btn_stop:
         	 LiveInterface.getInstance().stop();
-        	 back();
+        	 updateUI(false);
              break;
          case R.id.btn_switch:
         	 LiveInterface.getInstance().switchCamera();
