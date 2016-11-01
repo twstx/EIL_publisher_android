@@ -155,4 +155,4 @@ LiveInterface.getInstance().stop();
 ````
 -------- 关闭摄像头，释放资源
 ````java
-LiveInterface.getInstance().stop();
+LiveInterface.getInstance().uninit();
