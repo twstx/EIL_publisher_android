@@ -66,7 +66,7 @@ public class liveActivity extends Activity implements OnClickListener{
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-                    case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
+                    case LiveConstants.PUSH_ERR_NET_DISCONNECT:
                     	showMessage("连接失败，等待重连");
                    	 	updateUI(false);
                         break;
@@ -99,6 +99,7 @@ public class liveActivity extends Activity implements OnClickListener{
 				 int ret = LiveInterface.getInstance().start(); 
 				 if(ret < 0 )
 				 {
+					 showMessage("重连失败");
 					 Log.i(TAG, "reconnect start failed");
 					 updateUI(false);					   
 				 }else
@@ -183,9 +184,9 @@ public class liveActivity extends Activity implements OnClickListener{
         	
             switch (eventId) {
                 case LiveConstants.PUSH_ERR_NET_DISCONNECT://断线
-                case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL://连接失败
+               // case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL://连接失败
                 	 Log.i(TAG, "LiveEventInterface disconnect and reconnect"); 
-                	 msg.what = LiveConstants.PUSH_ERR_NET_CONNECT_FAIL;
+                	 msg.what = LiveConstants.PUSH_ERR_NET_DISCONNECT;
                 	 mHandler.sendMessage(msg);
                 	 //LiveInterface.getInstance().stop();
                 	 //重连
@@ -230,7 +231,7 @@ public class liveActivity extends Activity implements OnClickListener{
 		{
 			case 0:
 				mLivePushConfig.setVideoSize(640,480);
-				mLivePushConfig.setVideoFPS(20);
+				mLivePushConfig.setVideoFPS(15);
 				mLivePushConfig.setVideoBitrate(800);
 				break;
 			case 1:

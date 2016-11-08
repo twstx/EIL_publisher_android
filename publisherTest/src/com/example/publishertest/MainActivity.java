@@ -22,8 +22,8 @@ public class MainActivity extends Activity implements OnClickListener  {
 	EditText mUrlText;
 	public RadioButton mRadio480, mRadio540,mRadio720;
 	public RadioButton mRadioEncHW, mRadioEncSW;
-//	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy";
-	private String mRtmpUrl ="rtmp://10.0.60.65/live/liuy";
+	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy";
+//	private String mRtmpUrl ="rtmp://10.0.60.65/live/liuy";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
