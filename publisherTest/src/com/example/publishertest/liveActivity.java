@@ -67,7 +67,11 @@ public class liveActivity extends Activity implements OnClickListener{
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case LiveConstants.PUSH_ERR_NET_DISCONNECT:
-                    	showMessage("连接失败，等待重连");
+                    	showMessage("连接断开，等待重连");
+                   	 	updateUI(false);
+                        break;
+                    case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
+                    	showMessage("连接失败");
                    	 	updateUI(false);
                         break;
                     case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL:
@@ -81,17 +85,25 @@ public class liveActivity extends Activity implements OnClickListener{
                     case LiveConstants.PUSH_EVT_CONNECT_SUCC: 
                     	showMessage("连接成功");
                         break;
+                    case LiveConstants.PUSH_EVT_PUSH_BEGIN:
+                    	updateUI(true);
+                    	showMessage("开始推流");
+                        break;
+                    case LiveConstants.PUSH_EVT_PUSH_END:
+                    	updateUI(false);
+                    	showMessage("结束推流");
+                        break;
                     default:
                         break;
                 }
             }
 
         };
-		mRunnable = new Runnable() {
+/*		mRunnable = new Runnable() {
             public void run() {
             	 Log.i(TAG, "LiveEventInterface disconnect and reconnect init"); 
             	 try {
-					   	Thread.sleep(8000);
+					   	Thread.sleep(10000);
 					 } catch (InterruptedException e) {
 						 // TODO Auto-generated catch block
 						 e.printStackTrace();
@@ -99,15 +111,15 @@ public class liveActivity extends Activity implements OnClickListener{
 				 int ret = LiveInterface.getInstance().start(); 
 				 if(ret < 0 )
 				 {
-					 showMessage("重连失败");
 					 Log.i(TAG, "reconnect start failed");
 					 updateUI(false);					   
 				 }else
 				 {
 					 updateUI(true);
-				 }
+				 }				 
              }
         };
+	*/	
 	}
 	
 	@Override
@@ -137,18 +149,11 @@ public class liveActivity extends Activity implements OnClickListener{
 		 switch (v.getId()) {
 		 case R.id.btn_start:
 			 int ret = LiveInterface.getInstance().start();   
-			 if(ret < 0)
-			 {
-				 Log.i(TAG, "connect failed");
-				 showMessage("连接失败");
-				 updateUI(false);
-				 break;
-			 }
-			 updateUI(true);
+			
              break;
          case R.id.btn_stop:
         	 LiveInterface.getInstance().stop();
-        	 updateUI(false);
+        	 //updateUI(false);
              break;
          case R.id.btn_switch:
         	 LiveInterface.getInstance().switchCamera();
@@ -187,12 +192,15 @@ public class liveActivity extends Activity implements OnClickListener{
                // case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL://连接失败
                 	 Log.i(TAG, "LiveEventInterface disconnect and reconnect"); 
                 	 msg.what = LiveConstants.PUSH_ERR_NET_DISCONNECT;
-                	 mHandler.sendMessage(msg);
-                	 //LiveInterface.getInstance().stop();
+                	 mHandler.sendMessage(msg);               	 
                 	 //重连
-					 mHandler.post(mRunnable);
-					
+					 mHandler.post(mRunnable);					
 	                 break;
+                case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL://连接失败
+                    Log.i(TAG, "LiveEventInterface connect failed");
+                    msg.what = LiveConstants.PUSH_ERR_NET_CONNECT_FAIL;
+               	 	mHandler.sendMessage(msg);
+                    break;
                 case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL://音频采集编码线程启动失败
                     Log.i(TAG, "LiveEventInterface audio encoder failed");
                     msg.what = LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL;
@@ -206,6 +214,16 @@ public class liveActivity extends Activity implements OnClickListener{
                 case LiveConstants.PUSH_EVT_CONNECT_SUCC: //连接成功
                 	Log.i(TAG, "LiveEventInterface connect ok");
                 	msg.what = LiveConstants.PUSH_EVT_CONNECT_SUCC;
+                	mHandler.sendMessage(msg);
+                    break;
+                case LiveConstants.PUSH_EVT_PUSH_BEGIN: //开始推流
+                	Log.i(TAG, "LiveEventInterface begin ok");
+                	msg.what = LiveConstants.PUSH_EVT_PUSH_BEGIN;
+                	mHandler.sendMessage(msg);
+                    break;
+                case LiveConstants.PUSH_EVT_PUSH_END: //推流结束
+                	Log.i(TAG, "LiveEventInterface publish end");
+                	msg.what = LiveConstants.PUSH_EVT_PUSH_END;
                 	mHandler.sendMessage(msg);
                     break;
             }
