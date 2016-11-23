@@ -12,6 +12,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 视频码率：可设
 * [x] 支持固定横屏推流
 * [x] 支持前、后置摄像头动态切换
+* [x] 支持本地录像
 
 二. 运行环境
 
@@ -105,6 +106,8 @@ mLivePushConfig.setHWVideoEncode(true);//开启硬编码
 mLivePushConfig.setHWVideoEncode(false);//开启软编码
 //设置消息回调接口
 mLivePushConfig.setEventInterface(mCaptureStateListener);
+//设置录像文件存储路径
+mLivePushConfig.setRecordPath("/sdcard/");
 // 创建LivePushConfig对象
 LivePushConfig mLivePushConfig = new LivePushConfig();
 ````
@@ -144,6 +147,14 @@ LiveInterface.getInstance().start(mRtmpUrl);
 ````java
 // 切换前后摄像头
 LiveInterface.getInstance().switchCamera();
+````
+-------- 开始录像  
+````java
+LiveInterface.getInstance().startRecord();  
+````
+-------- 停止录像 
+````java
+LiveInterface.getInstance().stopRecord();  
 ````
 -------- 获取上传速度
 ````java

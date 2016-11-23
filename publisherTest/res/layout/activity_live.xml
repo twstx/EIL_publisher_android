@@ -34,14 +34,24 @@
             android:text="stop" />
 
         <Button
+            android:id="@+id/btn_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="record" />
+
+        <Button
             android:id="@+id/btn_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/button1"
-            android:layout_alignBottom="@+id/button1"
-            android:layout_marginLeft="42dp"
-            android:layout_toRightOf="@+id/linearLayout1"
             android:text="switch" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="recording"
+        android:textColor="#ff0000" />
 
 </RelativeLayout>

@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class liveActivity extends Activity implements OnClickListener{
@@ -28,11 +29,15 @@ public class liveActivity extends Activity implements OnClickListener{
 	private Button mBtnStartLive;
 	private Button mBtnStopLive;
 	private Button mBtnSwitchCam;
+	private Button mBtnRecord;
+	private TextView mText;
 	
 	static int mDefinitionMode = 0;//默认480分辨率
-	static String mRtmpUrl = "";
+	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy";
 	static int mEncodeMode = 1;//默认硬编码
 	private LivePushConfig mLivePushConfig;
+	private boolean mRecording = false;
+	
 	Handler mHandler = null; 
 	Runnable mRunnable;
 	 
@@ -54,6 +59,11 @@ public class liveActivity extends Activity implements OnClickListener{
 		mBtnStopLive.setEnabled(false);
 		mBtnSwitchCam = (Button) findViewById(R.id.btn_switch);
 		mBtnSwitchCam.setOnClickListener(this);
+		mBtnRecord = (Button) findViewById(R.id.btn_record);
+		mBtnRecord.setOnClickListener(this);
+		
+		mText = (TextView)findViewById(R.id.tv);
+		mText.setVisibility(View.INVISIBLE);
 		
 		mLivePushConfig = new LivePushConfig();
 		updatePushConfig();
@@ -67,7 +77,7 @@ public class liveActivity extends Activity implements OnClickListener{
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case LiveConstants.PUSH_ERR_NET_DISCONNECT:
-                    	showMessage("连接断开，等待重连");
+                    	showMessage("连接断开，请重连");
                    	 	updateUI(false);
                         break;
                     case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
@@ -76,13 +86,13 @@ public class liveActivity extends Activity implements OnClickListener{
                         break;
                     case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL:
                     	updateUI(false);
-                        showMessage("音频采集编码线程启动失败");
+                        showMessage("音频发送失败");
                         break;
                     case LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL:
                     	updateUI(false);
-                        showMessage("视频采集编码线程启动失败");
+                        showMessage("视频发送失败");
                         break;
-                    case LiveConstants.PUSH_EVT_CONNECT_SUCC: 
+                    case LiveConstants.PUSH_EVT_CONNECT_SUCC:
                     	showMessage("连接成功");
                         break;
                     case LiveConstants.PUSH_EVT_PUSH_BEGIN:
@@ -108,15 +118,7 @@ public class liveActivity extends Activity implements OnClickListener{
 						 // TODO Auto-generated catch block
 						 e.printStackTrace();
 					 }
-				 int ret = LiveInterface.getInstance().start(); 
-				 if(ret < 0 )
-				 {
-					 Log.i(TAG, "reconnect start failed");
-					 updateUI(false);					   
-				 }else
-				 {
-					 updateUI(true);
-				 }				 
+				 LiveInterface.getInstance().start(); 			 
              }
         };
 	*/	
@@ -148,7 +150,8 @@ public class liveActivity extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		 switch (v.getId()) {
 		 case R.id.btn_start:
-			 int ret = LiveInterface.getInstance().start();   
+			 int ret = 0;
+			 LiveInterface.getInstance().start(mRtmpUrl);
 			
              break;
          case R.id.btn_stop:
@@ -157,7 +160,23 @@ public class liveActivity extends Activity implements OnClickListener{
              break;
          case R.id.btn_switch:
         	 LiveInterface.getInstance().switchCamera();
-             break;         
+             break;
+         case R.id.btn_record:
+        	 if(mRecording)
+        	 {
+        		 LiveInterface.getInstance().stopRecord();
+        		 mBtnRecord.setText("record");
+        		 mRecording = false;
+        		 mText.setVisibility(View.INVISIBLE);
+        	 }else
+        	 {
+        		 LiveInterface.getInstance().startRecord();
+        		 mBtnRecord.setText("endrecord");
+        		 mRecording = true;
+        		 mText.setVisibility(View.VISIBLE);
+        	 }
+        	 
+             break;
 		 }
 	}
 	
@@ -233,6 +252,7 @@ public class liveActivity extends Activity implements OnClickListener{
 	private void updatePushConfig()
 	{
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
+		mLivePushConfig.setRecordPath("/sdcard/");
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
 		mLivePushConfig.setAppContext(this);
 		mLivePushConfig.setAudioChannels(AudioFormat.CHANNEL_IN_MONO);
@@ -251,11 +271,6 @@ public class liveActivity extends Activity implements OnClickListener{
 				mLivePushConfig.setVideoSize(640,480);
 				mLivePushConfig.setVideoFPS(15);
 				mLivePushConfig.setVideoBitrate(800);
-				break;
-			case 1:
-				mLivePushConfig.setVideoSize(960,540);
-				mLivePushConfig.setVideoFPS(18);
-				mLivePushConfig.setVideoBitrate(1000);
 				break;
 			case 2:
 				mLivePushConfig.setVideoSize(1280,720);

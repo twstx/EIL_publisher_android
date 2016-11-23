@@ -19,3 +19,7 @@ v0.2a    2016-11-08
 
 v0.2b    2016-11-16
 1、集成EIL_publisher_android SDK 0.2b版本；
+
+v0.3    2016-11-23
+1、集成EIL_publisher_android SDK 0.3版本；
+2、删除推流清晰度高清选项（960x540分辨率安卓机无法普遍支持）；

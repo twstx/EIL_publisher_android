@@ -20,7 +20,7 @@ public class MainActivity extends Activity implements OnClickListener  {
 	public final static String TAG = "MainActivity";
 	private Button mBtnSetOK;
 	EditText mUrlText;
-	public RadioButton mRadio480, mRadio540,mRadio720;
+	public RadioButton mRadio480, mRadio720;
 	public RadioButton mRadioEncHW, mRadioEncSW;
 	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy";
 //	private String mRtmpUrl ="rtmp://10.0.60.65/live/liuy";
@@ -59,7 +59,6 @@ public class MainActivity extends Activity implements OnClickListener  {
          });
 		
 		mRadio480 = (RadioButton) findViewById(R.id.radio480);
-		mRadio540 = (RadioButton) findViewById(R.id.radio540);
 		mRadio720 = (RadioButton) findViewById(R.id.radio720);
 		
 		RadioGroup groupdefinition = (RadioGroup)this.findViewById(R.id.radioGroup2);
@@ -72,11 +71,7 @@ public class MainActivity extends Activity implements OnClickListener  {
             	 if(arg1 == mRadio480.getId())
             	 {
             		  liveActivity.setDefinitionMode(0);
-            	 }            		
-            	 if(arg1 == mRadio540.getId())
-            	 {
-            		  liveActivity.setDefinitionMode(1);
-            	 }           		
+            	 }            		           		
             	 if(arg1 == mRadio720.getId())
             	 {
             		 liveActivity.setDefinitionMode(2);
