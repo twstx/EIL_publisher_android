@@ -37,6 +37,7 @@ public class liveActivity extends Activity implements OnClickListener{
 	static int mEncodeMode = 1;//Ä¬ÈÏÓ²±àÂë
 	private LivePushConfig mLivePushConfig;
 	private boolean mRecording = false;
+	private boolean mPublishing = false;
 	
 	Handler mHandler = null; 
 	Runnable mRunnable;
@@ -144,7 +145,26 @@ public class liveActivity extends Activity implements OnClickListener{
 		super.onPause();
 		LiveInterface.getInstance().pause();
 	}
-
+	
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		 if(mRecording)
+    	 {
+    		 LiveInterface.getInstance().stopRecord();
+    		 mBtnRecord.setText("record");
+    		 mRecording = false;
+    		 mText.setVisibility(View.INVISIBLE);
+    	 }
+		 if(mPublishing)
+		 {
+			 LiveInterface.getInstance().stop();
+			 updateUI(false);
+		 }
+	}
+	
+	int index = 0;
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -152,10 +172,12 @@ public class liveActivity extends Activity implements OnClickListener{
 		 case R.id.btn_start:
 			 int ret = 0;
 			 LiveInterface.getInstance().start(mRtmpUrl);
+			 mPublishing = true;
 			
              break;
          case R.id.btn_stop:
         	 LiveInterface.getInstance().stop();
+        	 mPublishing = false;
         	 //updateUI(false);
              break;
          case R.id.btn_switch:
