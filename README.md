@@ -13,6 +13,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持固定横屏推流
 * [x] 支持前、后置摄像头动态切换
 * [x] 支持本地录像
+* [x] 支持水印（硬编码预览推流都支持，软编码只支持预览）
 
 二. 运行环境
 
@@ -69,17 +70,16 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 
 - 在布局文件中加入预览View
 ````xml
- <SurfaceView
+ <android.opengl.GLSurfaceView
         android:id="@+id/surfaceView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="top|left|right|bottom" />
 ````
-- 初始化SurfaceView
+- 初始化GLSurfaceView
 ````java
-SurfaceView mSurfaceView=(SurfaceView)findViewById(R.id.surfaceView);
+GLSurfaceView mSurfaceView=(GLSurfaceView)findViewById(R.id.surfaceView);
 ````
 - LivePushConfig
 推流过程中不可动态改变的参数需要在创建该类的对象时指定。
@@ -108,6 +108,9 @@ mLivePushConfig.setHWVideoEncode(false);//开启软编码
 mLivePushConfig.setEventInterface(mCaptureStateListener);
 //设置录像文件存储路径
 mLivePushConfig.setRecordPath("/sdcard/");
+//设置水印以及显示位置
+Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
+mLivePushConfig.setWatermark(watermarkImage,1000,100,200,200);
 // 创建LivePushConfig对象
 LivePushConfig mLivePushConfig = new LivePushConfig();
 ````
@@ -154,7 +157,11 @@ LiveInterface.getInstance().startRecord();
 ````
 -------- 停止录像 
 ````java
-LiveInterface.getInstance().stopRecord();  
+LiveInterface.getInstance().stopRecord(); 
+````
+-------- 设置水印状态（true：显示；false：隐藏） 
+````java
+LiveInterface.getInstance().setWaterMarkState(true); 
 ````
 -------- 获取上传速度
 ````java

@@ -6,32 +6,36 @@ import com.eil.eilpublisher.liveConstants.LiveConstants;
 import com.eil.eilpublisher.media.LivePushConfig;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioFormat;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class liveActivity extends Activity implements OnClickListener{
+public class liveActivity extends Activity implements OnClickListener, OnCheckedChangeListener{
 
 	public final static String TAG = "LiveActivity";
-	private SurfaceView mSurfaceView;
+	private GLSurfaceView mSurfaceView;
 	
 	private Button mBtnStartLive;
 	private Button mBtnStopLive;
 	private Button mBtnSwitchCam;
 	private Button mBtnRecord;
 	private TextView mText;
-	
+	CheckBox mWatermark;
 	static int mDefinitionMode = 0;//默认480分辨率
 	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy";
 	static int mEncodeMode = 1;//默认硬编码
@@ -65,10 +69,13 @@ public class liveActivity extends Activity implements OnClickListener{
 		
 		mText = (TextView)findViewById(R.id.tv);
 		mText.setVisibility(View.INVISIBLE);
+		mWatermark=(CheckBox)findViewById(R.id.checkBox1);
+		mWatermark.setOnCheckedChangeListener(this);
+		//mWatermark.setChecked(true);
 		
 		mLivePushConfig = new LivePushConfig();
 		updatePushConfig();
-		mSurfaceView=(SurfaceView)findViewById(R.id.surfaceView);
+		mSurfaceView=(GLSurfaceView)findViewById(R.id.surfaceView1);
 		LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
 		
 		mHandler=new Handler()
@@ -162,6 +169,7 @@ public class liveActivity extends Activity implements OnClickListener{
 			 LiveInterface.getInstance().stop();
 			 updateUI(false);
 		 }
+		 mWatermark.setChecked(false);
 	}
 	
 	int index = 0;
@@ -274,6 +282,8 @@ public class liveActivity extends Activity implements OnClickListener{
 	private void updatePushConfig()
 	{
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
+		Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
+		mLivePushConfig.setWatermark(watermarkImage,1000,100,200,200);
 		mLivePushConfig.setRecordPath("/sdcard/");
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
 		mLivePushConfig.setAppContext(this);
@@ -302,14 +312,6 @@ public class liveActivity extends Activity implements OnClickListener{
 		}
 	}
 	
-    private void back() 
-    {
-	    Intent myIntent = new Intent();  
-        myIntent = new Intent(liveActivity.this, MainActivity.class);  
-        startActivity(myIntent);  
-        this.finish();
-    }
-
 	public static void setDefinitionMode(int i) {
 		// TODO Auto-generated method stub
 		mDefinitionMode = i;
@@ -323,6 +325,15 @@ public class liveActivity extends Activity implements OnClickListener{
 	public static void setEncodeMode(int i) {
 		// TODO Auto-generated method stub
 		mEncodeMode = i;
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		// TODO Auto-generated method stub
+		 if(isChecked){ 
+			 LiveInterface.getInstance().setWaterMarkState(true);
+         }else{ 
+        	 LiveInterface.getInstance().setWaterMarkState(false);
+         } 
 	}	
-	
 }
