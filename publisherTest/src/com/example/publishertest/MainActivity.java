@@ -7,23 +7,28 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener  {
+public class MainActivity extends Activity implements OnClickListener, android.widget.CompoundButton.OnCheckedChangeListener {
+
 	public final static String TAG = "MainActivity";
 	private Button mBtnSetOK;
 	EditText mUrlText;
 	public RadioButton mRadio480, mRadio720;
 	public RadioButton mRadioEncHW, mRadioEncSW;
+	public RadioButton mPublishH, mPublishV;
 	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy";
-//	private String mRtmpUrl ="rtmp://10.0.60.65/live/liuy";
+	//private String mRtmpUrl ="rtmp://10.0.60.65/live/liuy";
+	CheckBox mWeeknet;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,27 +62,62 @@ public class MainActivity extends Activity implements OnClickListener  {
             	 }           		              
              }
          });
+	    mWeeknet = (CheckBox) findViewById(R.id.checkNet);
+	    mWeeknet.setOnCheckedChangeListener(this);
+	   
 		
+	    RadioGroup groupdefinition = (RadioGroup)this.findViewById(R.id.radioGroup2);
 		mRadio480 = (RadioButton) findViewById(R.id.radio480);
 		mRadio720 = (RadioButton) findViewById(R.id.radio720);
-		
-		RadioGroup groupdefinition = (RadioGroup)this.findViewById(R.id.radioGroup2);
-        //绑定一个匿名监听器
 		groupdefinition.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-             
-             @Override
-             public void onCheckedChanged(RadioGroup arg0, int arg1) {
-                 // TODO Auto-generated method stub
-            	 if(arg1 == mRadio480.getId())
-            	 {
-            		  liveActivity.setDefinitionMode(0);
-            	 }            		           		
-            	 if(arg1 == mRadio720.getId())
-            	 {
-            		 liveActivity.setDefinitionMode(2);
-            	 }           		 
-             }
-         });
+            
+            @Override
+            public void onCheckedChanged(RadioGroup arg0, int arg1) {
+                // TODO Auto-generated method stub
+           	 if(arg1 == mRadio480.getId())
+           		 liveActivity.setDefinitionMode(0);
+           	 if(arg1 == mRadio720.getId())
+           		liveActivity.setDefinitionMode(2);
+            }
+        });
+		
+		RadioGroup groupOrientation = (RadioGroup)this.findViewById(R.id.radioGroup3);
+		mPublishH = (RadioButton) findViewById(R.id.radioH);
+		mPublishV = (RadioButton) findViewById(R.id.radioV);
+		groupOrientation.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            
+            @Override
+            public void onCheckedChanged(RadioGroup arg0, int arg1) {
+                // TODO Auto-generated method stub
+           	 if(arg1 == mPublishH.getId())
+           		liveActivity.setVideoOrientation(0);
+           	 if(arg1 == mPublishV.getId())
+           		liveActivity.setVideoOrientation(1); 
+            }
+        });
+		mRadioEncHW.setChecked(true);
+		mRadio480.setChecked(true);
+		mPublishH.setChecked(true);
+		mWeeknet.setChecked(true);		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -101,5 +141,17 @@ public class MainActivity extends Activity implements OnClickListener  {
 		intent.setClass(MainActivity.this,liveActivity.class);
 		startActivity(intent);
 		finish();
+	}
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		// TODO Auto-generated method stub
+		if(R.id.checkNet == buttonView.getId())
+		{
+			if(isChecked){ 
+				liveActivity.setWeaknetOptition(true);
+	        }else{ 
+	        	liveActivity.setWeaknetOptition(false);
+	        } 
+		}
 	}
 }

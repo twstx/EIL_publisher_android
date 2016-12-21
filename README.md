@@ -4,13 +4,13 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 一. 功能特点
 
 * [x] 支持软编和硬编
-* [x] 弱网处理：可根据实际弱网情况主动丢帧
+* [x] 弱网处理：可根据实际弱网情况主动丢帧降码率
 * [x] 音频编码：AAC
 * [x] 视频编码：H.264
 * [x] 推流协议：RTMP
 * [x] 视频分辨率： 可设 （需要取手机支持的摄像头预览分辨率）
 * [x] 视频码率：可设
-* [x] 支持固定横屏推流
+* [x] 支持固定横竖屏推流
 * [x] 支持前、后置摄像头动态切换
 * [x] 支持本地录像
 * [x] 支持水印（硬编码预览推流都支持，软编码只支持预览）
@@ -111,6 +111,10 @@ mLivePushConfig.setRecordPath("/sdcard/");
 //设置水印以及显示位置
 Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
 mLivePushConfig.setWatermark(watermarkImage,1000,100,200,200);
+//设置弱网优化开关
+mLivePushConfig.setWeaknetOptition(true);(true：打开；false：关闭）默认为打开状态
+//设置推流视频方向
+mLivePushConfig.setVideoResolution(mPublishOrientation);（0：横屏；1：竖屏）默认为横屏
 // 创建LivePushConfig对象
 LivePushConfig mLivePushConfig = new LivePushConfig();
 ````

@@ -6,6 +6,8 @@ import com.eil.eilpublisher.liveConstants.LiveConstants;
 import com.eil.eilpublisher.media.LivePushConfig;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioFormat;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -42,6 +45,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private LivePushConfig mLivePushConfig;
 	private boolean mRecording = false;
 	private boolean mPublishing = false;
+	static boolean mWeaknetOptition = true;
+	static int mPublishOrientation = 0;
 	
 	Handler mHandler = null; 
 	Runnable mRunnable;
@@ -56,7 +61,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 				
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		WindowManager.LayoutParams.FLAG_FULLSCREEN);//…Ë÷√»´∆¡
-		
+		if(0 == mPublishOrientation)
+		{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}else
+		{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		mBtnStartLive = (Button) findViewById(R.id.btn_start);
 		mBtnStartLive.setOnClickListener(this);
 		mBtnStopLive = (Button) findViewById(R.id.btn_stop);
@@ -283,12 +294,14 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	{
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
 		Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
-		mLivePushConfig.setWatermark(watermarkImage,1000,100,200,200);
+		mLivePushConfig.setWatermark(watermarkImage,1000,100,200,100);
 		mLivePushConfig.setRecordPath("/sdcard/");
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
 		mLivePushConfig.setAppContext(this);
 		mLivePushConfig.setAudioChannels(AudioFormat.CHANNEL_IN_MONO);
 		mLivePushConfig.setAudioSampleRate(44100);
+		mLivePushConfig.setWeaknetOptition(mWeaknetOptition);
+		mLivePushConfig.setVideoResolution(mPublishOrientation);
 		if(0 == mEncodeMode)
 		{
 			mLivePushConfig.setHWVideoEncode(false);
@@ -296,20 +309,34 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		{
 			mLivePushConfig.setHWVideoEncode(true);
 		}
-		
+				
 		switch(mDefinitionMode)
 		{
 			case 0:
-				mLivePushConfig.setVideoSize(640,480);
+				if(0 == mPublishOrientation)
+				{
+					mLivePushConfig.setVideoSize(640,360);
+				}else
+				{
+					mLivePushConfig.setVideoSize(360,640);
+				}
+				
 				mLivePushConfig.setVideoFPS(15);
 				mLivePushConfig.setVideoBitrate(800);
 				break;
 			case 2:
-				mLivePushConfig.setVideoSize(1280,720);
+				if(0 == mPublishOrientation)
+				{
+					mLivePushConfig.setVideoSize(1280,720);
+				}else
+				{
+					mLivePushConfig.setVideoSize(720,1280);
+				}
+				
 				mLivePushConfig.setVideoFPS(15);
 				mLivePushConfig.setVideoBitrate(1200);
 				break;	
-		}
+		}		
 	}
 	
 	public static void setDefinitionMode(int i) {
@@ -327,6 +354,15 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mEncodeMode = i;
 	}
 
+	public static void setWeaknetOptition(boolean state)
+	{
+		mWeaknetOptition = state;
+	}
+	
+	public static void setVideoOrientation(int orientation)
+	{
+		mPublishOrientation = orientation;
+	}
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		// TODO Auto-generated method stub
@@ -336,4 +372,18 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         	 LiveInterface.getInstance().setWaterMarkState(false);
          } 
 	}	
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                 && event.getRepeatCount() == 0) {
+        	 Intent intent = new Intent();
+     		intent.setClass(liveActivity.this,MainActivity.class);
+     		startActivity(intent);
+     		finish();
+             return true;
+         }
+         return super.onKeyDown(keyCode, event);
+     }
+
 }

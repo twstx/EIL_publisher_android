@@ -13,8 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" >
+        android:layout_centerHorizontal="true" >
 
         <TextView
             android:id="@+id/textView1"
@@ -26,77 +25,134 @@
             android:id="@+id/editText1"
             android:layout_width="256dp"
             android:layout_height="wrap_content"
-            android:ems="10" />
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp"
+        android:text="ok" />
+
+    <CheckBox
+        android:id="@+id/checkNet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_ok"
+        android:layout_marginBottom="44dp"
+        android:layout_toLeftOf="@+id/btn_ok"
+        android:text="弱网优化" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_marginTop="52dp" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="编码方式" />
+
+         <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:contentDescription="编码方式" >
+            
+        <RadioButton
+            android:id="@+id/radioHW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="硬编码" />
+
+        <RadioButton
+            android:id="@+id/radioSW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="软编码" />
+         </RadioGroup>
     </LinearLayout>
 
-      <TextView
-         android:id="@+id/textView2"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/linearLayout1"
-         android:layout_below="@+id/linearLayout1"
-         android:layout_marginTop="40dp"
-         android:text="清晰度" />
-     <RadioGroup
-         android:id="@+id/radioGroup2"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="150dp"
-         android:layout_marginLeft="30dp"
-         android:contentDescription="清晰度" >
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkNet"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_marginTop="26dp" >
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清晰度" />
+
+          <RadioGroup
+            android:id="@+id/radioGroup2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           	android:orientation="horizontal"
+            android:contentDescription="清晰度" >
+            
+        <RadioButton
+            android:id="@+id/radio480"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标清" />
+
+        <RadioButton
+            android:id="@+id/radio720"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="超清" />
+         </RadioGroup>
+    </LinearLayout>
+
+     <LinearLayout
+         android:id="@+id/linearLayout4"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/linearLayout3"
+         android:layout_centerVertical="true" >
+
+         <TextView
+             android:id="@+id/textView4"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignLeft="@+id/linearLayout2"
+             android:layout_centerVertical="true"
+             android:text="推流方向" />
+
+          <RadioGroup
+            android:id="@+id/radioGroup3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           	android:orientation="horizontal"
+            android:contentDescription="推流方向" >
+        
          <RadioButton
-             android:id="@+id/radio480"
+             android:id="@+id/radioH"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:checked="true"
-             android:text="标清" />
+             android:text="横屏" />
 
          <RadioButton
-             android:id="@+id/radio720"
+             android:id="@+id/radioV"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:text="超清" />
-     </RadioGroup>
-     
-      <RadioGroup 
-            android:id="@+id/radioGroup"
-            android:contentDescription="编码方式" 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_marginTop="300dp"
-         	android:layout_marginLeft="30dp">
-     	<RadioButton
-     	    android:layout_width="wrap_content"
-     	    android:layout_height="wrap_content" 
-     	    android:id="@+id/radioSW" 
-     	    android:text="软编码" >     	    
-     	</RadioButton>
-    	<RadioButton 
-    	    android:layout_width="wrap_content" 
-    	    android:layout_height="wrap_content" 
-    	    android:id="@+id/radioHW" 
-    	    android:text="硬编码"
-    	    android:checked="true">    	    
-    	</RadioButton>    
-  		</RadioGroup>
-
-   
-     <Button
-         android:id="@+id/btn_ok"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentBottom="true"
-         android:layout_centerHorizontal="true"
-         android:layout_marginBottom="19dp"
-         android:text="ok" />
-
-     <TextView
-         android:id="@+id/textView3"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/textView2"
-         android:layout_below="@+id/radioGroup2"
-         android:layout_marginTop="26dp"
-         android:text="编码方式" />
+             android:text="竖屏" />
+         </RadioGroup>
+     </LinearLayout>
 </RelativeLayout>
