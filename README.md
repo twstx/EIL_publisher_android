@@ -10,7 +10,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 推流协议：RTMP
 * [x] 视频分辨率： 可设 （需要取手机支持的摄像头预览分辨率）
 * [x] 视频码率：可设
-* [x] 支持固定横竖屏推流
+* [x] 支持固定横竖屏推流,视频方向自适应
 * [x] 支持前、后置摄像头动态切换
 * [x] 支持本地录像
 * [x] 支持水印（硬编码预览推流都支持，软编码只支持预览）
@@ -115,6 +115,8 @@ mLivePushConfig.setWatermark(watermarkImage,1000,100,200,200);
 mLivePushConfig.setWeaknetOptition(true);(true：打开；false：关闭）默认为打开状态
 //设置推流视频方向
 mLivePushConfig.setVideoResolution(mPublishOrientation);（0：横屏；1：竖屏）默认为横屏
+//设置推流视频方向自适应开关
+mLivePushConfig.setAutoRotation(true);(true：打开；false：关闭 )默认为关闭状态
 // 创建LivePushConfig对象
 LivePushConfig mLivePushConfig = new LivePushConfig();
 ````

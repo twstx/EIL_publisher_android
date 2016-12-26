@@ -155,4 +155,15 @@
              android:text="竖屏" />
          </RadioGroup>
      </LinearLayout>
+
+     <CheckBox
+         android:id="@+id/autoRotate"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/checkNet"
+         android:layout_alignBottom="@+id/checkNet"
+         android:layout_alignRight="@+id/linearLayout1"
+         android:layout_marginRight="24dp"
+         android:text="视频方向自适应" />
+
 </RelativeLayout>

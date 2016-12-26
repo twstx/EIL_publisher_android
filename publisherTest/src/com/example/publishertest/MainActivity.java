@@ -1,4 +1,6 @@
 package com.example.publishertest;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,7 +30,8 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 	public RadioButton mPublishH, mPublishV;
 	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy";
 	//private String mRtmpUrl ="rtmp://10.0.60.65/live/liuy";
-	CheckBox mWeeknet;
+	CheckBox mWeeknet,mAutoRotate;
+	private List<CheckBox> checkBoxs=new ArrayList<CheckBox>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,12 @@ public class MainActivity extends Activity implements OnClickListener, android.w
          });
 	    mWeeknet = (CheckBox) findViewById(R.id.checkNet);
 	    mWeeknet.setOnCheckedChangeListener(this);
-	   
+	    
+	    mAutoRotate =  (CheckBox) findViewById(R.id.autoRotate);
+	    mAutoRotate.setOnCheckedChangeListener(this);
+	    
+	    checkBoxs.add(mWeeknet);
+	    checkBoxs.add(mAutoRotate);
 		
 	    RadioGroup groupdefinition = (RadioGroup)this.findViewById(R.id.radioGroup2);
 		mRadio480 = (RadioButton) findViewById(R.id.radio480);
@@ -151,6 +159,14 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 				liveActivity.setWeaknetOptition(true);
 	        }else{ 
 	        	liveActivity.setWeaknetOptition(false);
+	        } 
+		}
+		if(R.id.autoRotate == buttonView.getId())
+		{
+			if(isChecked){ 
+				 liveActivity.setAutoRotateState(true);
+	        }else{ 
+	        	 liveActivity.setAutoRotateState(false);
 	        } 
 		}
 	}

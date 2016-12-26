@@ -47,6 +47,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private boolean mPublishing = false;
 	static boolean mWeaknetOptition = true;
 	static int mPublishOrientation = 0;
+	static boolean mAutoRotate = false;
 	
 	Handler mHandler = null; 
 	Runnable mRunnable;
@@ -183,13 +184,11 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		 mWatermark.setChecked(false);
 	}
 	
-	int index = 0;
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		 switch (v.getId()) {
 		 case R.id.btn_start:
-			 int ret = 0;
 			 LiveInterface.getInstance().start(mRtmpUrl);
 			 mPublishing = true;
 			
@@ -302,6 +301,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setAudioSampleRate(44100);
 		mLivePushConfig.setWeaknetOptition(mWeaknetOptition);
 		mLivePushConfig.setVideoResolution(mPublishOrientation);
+		mLivePushConfig.setAutoRotation(mAutoRotate);
 		if(0 == mEncodeMode)
 		{
 			mLivePushConfig.setHWVideoEncode(false);
@@ -363,6 +363,12 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	{
 		mPublishOrientation = orientation;
 	}
+	
+	public static void setAutoRotateState(boolean state)
+	{
+		mAutoRotate = state;
+	}
+	
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		// TODO Auto-generated method stub
