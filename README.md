@@ -14,6 +14,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持前、后置摄像头动态切换
 * [x] 支持本地录像
 * [x] 支持水印（硬编码预览推流都支持，软编码只支持预览）
+* [x] 支持全局美颜滤镜（硬编码预览推流都支持，软编码只支持预览）
 
 二. 运行环境
 
@@ -168,6 +169,10 @@ LiveInterface.getInstance().stopRecord();
 -------- 设置水印状态（true：显示；false：隐藏） 
 ````java
 LiveInterface.getInstance().setWaterMarkState(true); 
+````
+-------- 设置滤镜级别 
+````java
+LiveInterface.getInstance().setFilterLevel(level); 
 ````
 -------- 获取上传速度
 ````java

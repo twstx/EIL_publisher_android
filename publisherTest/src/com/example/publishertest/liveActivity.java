@@ -25,10 +25,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class liveActivity extends Activity implements OnClickListener, OnCheckedChangeListener{
+public class liveActivity extends Activity implements OnClickListener, OnCheckedChangeListener,OnSeekBarChangeListener{
 
 	public final static String TAG = "LiveActivity";
 	private GLSurfaceView mSurfaceView;
@@ -48,6 +50,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	static boolean mWeaknetOptition = true;
 	static int mPublishOrientation = 0;
 	static boolean mAutoRotate = false;
+	private SeekBar mFilterLevelBar;
 	
 	Handler mHandler = null; 
 	Runnable mRunnable;
@@ -142,6 +145,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
              }
         };
 	*/	
+		mFilterLevelBar = (SeekBar) findViewById(R.id.seekBar1);
+        mFilterLevelBar.setOnSeekBarChangeListener(this);
 	}
 	
 	@Override
@@ -391,5 +396,23 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
          }
          return super.onKeyDown(keyCode, event);
      }
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		// TODO Auto-generated method stub
+		LiveInterface.getInstance().setFilterLevel(progress);
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
