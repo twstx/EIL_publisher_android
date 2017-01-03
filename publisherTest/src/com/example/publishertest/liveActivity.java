@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -54,7 +55,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	
 	Handler mHandler = null; 
 	Runnable mRunnable;
-	 
+
+	private float lastDestance;//开始距离  
+	private float currentDestance;//结束距离
+	private int curZoomLevel = 1;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -414,5 +418,42 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public boolean onTouchEvent(MotionEvent e){
+		switch (e.getAction()&MotionEvent.ACTION_MASK)
+		{  
+		   case MotionEvent.ACTION_DOWN://手指下压   
+			    break;  
+		   case MotionEvent.ACTION_MOVE://手指在屏幕移动，改事件会不断被调用  
+			   if (e.getPointerCount()>=2)
+               {
+                   float offSetX =e.getX(0)-e.getX(1);//获取
+                   float offSetY =e.getY(0)-e.getY(1);
+                   currentDestance = (float) Math.sqrt(offSetX*offSetX+offSetY*offSetY);//获取两点间距离 然后运用勾股定理 算出两个手指点之间的距离
 
+                   if (lastDestance<0) {
+                      lastDestance= (float)currentDestance;//将第一次获取的两点距离  复制给lastDestance
+                   }
+                   else {
+                       if (currentDestance-lastDestance>20)
+                       {
+                    	   curZoomLevel += 1;
+                    	   Log.i(TAG, "onTouchEvent zoom in" + curZoomLevel);
+                           LiveInterface.getInstance().setZoomLevel(curZoomLevel);
+                           lastDestance =currentDestance;//将这一次的两点间距离赋值给lastDestance  以便每次比较
+                       }
+                       else if (lastDestance-currentDestance>20){
+                    	   Log.i(TAG, "onTouchEvent zoom out"+ curZoomLevel);
+                           curZoomLevel -= 1;
+                           LiveInterface.getInstance().setZoomLevel(curZoomLevel);
+                           lastDestance =currentDestance;
+                       }
+                   }
+               }
+			   break;			   
+		   default:  
+			    break;  
+		}  
+		return true;		
+	}
 }
