@@ -19,7 +19,7 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="url" />
+            android:text="publishUrl" />
 
         <EditText
             android:id="@+id/editText1"
@@ -30,24 +30,6 @@
             <requestFocus />
         </EditText>
     </LinearLayout>
-    
-    <Button
-        android:id="@+id/btn_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="19dp"
-        android:text="ok" />
-
-    <CheckBox
-        android:id="@+id/checkNet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_ok"
-        android:layout_marginBottom="44dp"
-        android:layout_toLeftOf="@+id/btn_ok"
-        android:text="弱网优化" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -74,6 +56,7 @@
             android:id="@+id/radioHW"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="硬编码" />
 
         <RadioButton
@@ -106,10 +89,16 @@
             android:contentDescription="清晰度" >
             
         <RadioButton
+            android:id="@+id/radio360"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="标清" />
+          <RadioButton
             android:id="@+id/radio480"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="标清" />
+            android:text="高清" />
 
         <RadioButton
             android:id="@+id/radio720"
@@ -165,5 +154,43 @@
          android:layout_alignRight="@+id/linearLayout1"
          android:layout_marginRight="24dp"
          android:text="视频方向自适应" />
+
+     <CheckBox
+         android:id="@+id/checkNet"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/linearLayout4"
+         android:layout_marginTop="29dp"
+         android:layout_toLeftOf="@+id/btn_ok"
+         android:text="弱网优化" />
+
+     <LinearLayout
+         android:id="@+id/linearLayout5"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/linearLayout2"
+         android:layout_below="@+id/autoRotate"
+         android:layout_marginTop="17dp" >
+
+         <TextView
+             android:id="@+id/textView2"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="playUrl" />
+
+         <EditText
+             android:id="@+id/editText2"
+             android:layout_width="256dp"
+             android:layout_height="wrap_content"
+             android:ems="10" />
+     </LinearLayout>
+
+     <Button
+         android:id="@+id/btn_ok"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_centerHorizontal="true"
+         android:text="ok" />
 
 </RelativeLayout>

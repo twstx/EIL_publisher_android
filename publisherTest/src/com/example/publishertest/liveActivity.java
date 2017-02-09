@@ -42,12 +42,16 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnRecord;
 	private TextView mText;
 	CheckBox mWatermark;
-	static int mDefinitionMode = 0;//默认480分辨率
-	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy";
-	static int mEncodeMode = 1;//默认硬编码
+	private Button mBtnPlay;
+	private Button mBtnResize;
 	private LivePushConfig mLivePushConfig;
+	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
+	static String mPlayUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
+	static int mDefinitionMode = 0;//默认480分辨
+	static int mEncodeMode = 1;//默认硬编码
 	private boolean mRecording = false;
 	private boolean mPublishing = false;
+	private boolean mPlaying = false;
 	static boolean mWeaknetOptition = true;
 	static int mPublishOrientation = 0;
 	static boolean mAutoRotate = false;
@@ -85,6 +89,11 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mBtnSwitchCam.setOnClickListener(this);
 		mBtnRecord = (Button) findViewById(R.id.btn_record);
 		mBtnRecord.setOnClickListener(this);
+		mBtnPlay = (Button) findViewById(R.id.btn_play);
+		mBtnPlay.setOnClickListener(this);
+		mBtnResize = (Button) findViewById(R.id.btn_resize);
+		mBtnResize.setOnClickListener(this);
+		mBtnResize.setEnabled(false);
 		
 		mText = (TextView)findViewById(R.id.tv);
 		mText.setVisibility(View.INVISIBLE);
@@ -129,6 +138,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
                     case LiveConstants.PUSH_EVT_PUSH_END:
                     	updateUI(false);
                     	showMessage("结束推流");
+                        break;
+                    case LiveConstants.PLAY_ERR_NET_DECODE_FAIL:
+                    	showMessage("媒体输入打开失败");
+                    	LiveInterface.getInstance().stopPlay();
+               		 	mBtnResize.setEnabled(false);
+               		 	mBtnPlay.setText("play");
+               		 	mPlaying = false; 
                         break;
                     default:
                         break;
@@ -190,6 +206,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			 LiveInterface.getInstance().stop();
 			 updateUI(false);
 		 }
+		 if(mPlaying)
+		 {
+			 LiveInterface.getInstance().stopPlay();
+			 mBtnResize.setEnabled(false);
+			 mBtnPlay.setText("play");
+			 mPlaying = false;
+		 }
 		 mWatermark.setChecked(false);
 	}
 	
@@ -226,9 +249,30 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         	 }
         	 
              break;
+         case R.id.btn_play:
+        	 if(mPlaying)
+        	 {
+        		 LiveInterface.getInstance().stopPlay();
+        		 mBtnResize.setEnabled(false);
+        		 mBtnPlay.setText("play");
+        		 mPlaying = false; 
+        	 }else
+        	 {
+        		 LiveInterface.getInstance().startPlay(mPlayUrl);
+        		 mBtnResize.setEnabled(true);
+        		 mBtnPlay.setText("stopPlay");
+        		 mPlaying = true;
+        	 }
+        	 break;
+         case R.id.btn_resize:
+        	 if(mPlaying)
+        	 {
+        		 LiveInterface.getInstance().resize();
+        	 }
+        	 break;
 		 }
 	}
-	
+
 	private void showMessage(String message)
 	{
 		 Toast toast = Toast.makeText(liveActivity.this, 
@@ -294,6 +338,11 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
                 	msg.what = LiveConstants.PUSH_EVT_PUSH_END;
                 	mHandler.sendMessage(msg);
                     break;
+                case LiveConstants.PLAY_ERR_NET_DECODE_FAIL: //媒体输入打开失败
+                	Log.i(TAG, "LiveEventInterface player failed");
+                	msg.what = LiveConstants.PLAY_ERR_NET_DECODE_FAIL;
+                	mHandler.sendMessage(msg);
+                    break;    
             }
         }
     };
@@ -330,8 +379,20 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 					mLivePushConfig.setVideoSize(360,640);
 				}
 				
-				mLivePushConfig.setVideoFPS(15);
+				mLivePushConfig.setVideoFPS(20);
 				mLivePushConfig.setVideoBitrate(800);
+				break;
+			case 1:
+				if(0 == mPublishOrientation)
+				{
+					mLivePushConfig.setVideoSize(848,480);
+				}else
+				{
+					mLivePushConfig.setVideoSize(480,848);
+				}
+				
+				mLivePushConfig.setVideoFPS(20);
+				mLivePushConfig.setVideoBitrate(1000);
 				break;
 			case 2:
 				if(0 == mPublishOrientation)
@@ -456,4 +517,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		}  
 		return true;		
 	}
+	public static void setPlayUrl(String playUrl) {
+		// TODO Auto-generated method stub
+		mPlayUrl = playUrl;
+	}  
 }

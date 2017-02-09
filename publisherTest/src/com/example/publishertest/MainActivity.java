@@ -24,12 +24,12 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 
 	public final static String TAG = "MainActivity";
 	private Button mBtnSetOK;
-	EditText mUrlText;
-	public RadioButton mRadio480, mRadio720;
+	EditText mUrlText,mPlayUrlText;
+	public RadioButton mRadio480, mRadio360,mRadio720;
 	public RadioButton mRadioEncHW, mRadioEncSW;
 	public RadioButton mPublishH, mPublishV;
-	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy";
-	//private String mRtmpUrl ="rtmp://10.0.60.65/live/liuy";
+	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
+	private String mPlayUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
 	CheckBox mWeeknet,mAutoRotate;
 	private List<CheckBox> checkBoxs=new ArrayList<CheckBox>();
 	
@@ -44,7 +44,10 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 		
 		mUrlText =(EditText)findViewById(R.id.editText1);
 		mUrlText.setText(mRtmpUrl.toCharArray(), 0, mRtmpUrl.length());  
-		 
+		
+		mPlayUrlText =(EditText)findViewById(R.id.editText2);
+		mPlayUrlText.setText(mPlayUrl.toCharArray(), 0, mPlayUrl.length());  
+		
 		RadioGroup groupencoder = (RadioGroup)this.findViewById(R.id.radioGroup);
 		mRadioEncHW =  (RadioButton) findViewById(R.id.radioHW);
 	    mRadioEncSW =  (RadioButton) findViewById(R.id.radioSW);
@@ -75,6 +78,7 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 	    checkBoxs.add(mAutoRotate);
 		
 	    RadioGroup groupdefinition = (RadioGroup)this.findViewById(R.id.radioGroup2);
+	    mRadio360 = (RadioButton) findViewById(R.id.radio360);
 		mRadio480 = (RadioButton) findViewById(R.id.radio480);
 		mRadio720 = (RadioButton) findViewById(R.id.radio720);
 		groupdefinition.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -82,8 +86,10 @@ public class MainActivity extends Activity implements OnClickListener, android.w
             @Override
             public void onCheckedChanged(RadioGroup arg0, int arg1) {
                 // TODO Auto-generated method stub
-           	 if(arg1 == mRadio480.getId())
+           	 if(arg1 == mRadio360.getId())
            		 liveActivity.setDefinitionMode(0);
+           	 if(arg1 == mRadio480.getId())
+           		 liveActivity.setDefinitionMode(1);
            	 if(arg1 == mRadio720.getId())
            		liveActivity.setDefinitionMode(2);
             }
@@ -145,6 +151,9 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 		mRtmpUrl = strUrl;
 	    liveActivity.setRtmpUrl(strUrl);
 	        
+		String playUrl="";  
+		playUrl=mPlayUrlText.getText().toString();
+		liveActivity.setPlayUrl(playUrl);
 		Intent intent = new Intent();
 		intent.setClass(MainActivity.this,liveActivity.class);
 		startActivity(intent);
