@@ -1,6 +1,7 @@
 package com.example.publishertest;
 
-import com.eil.eilpublisher.interfaces.LiveEventInterface;
+import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveEventInterface;
+import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveNetStateInterface;
 import com.eil.eilpublisher.interfaces.LiveInterface;
 import com.eil.eilpublisher.liveConstants.LiveConstants;
 import com.eil.eilpublisher.media.LivePushConfig;
@@ -44,6 +45,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	CheckBox mWatermark;
 	private Button mBtnPlay;
 	private Button mBtnResize;
+	private static TextView mNetInfoTv;
+	
 	private LivePushConfig mLivePushConfig;
 	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
 	static String mPlayUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
@@ -63,7 +66,12 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private float lastDestance;//开始距离  
 	private float currentDestance;//结束距离
 	private int curZoomLevel = 1;
-	 
+
+	
+	public static final int PUBLISH_EVENTINFO_MSG=1;
+	public static final int PUBLISH_NETINFO_MSG=2;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,7 +107,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mText.setVisibility(View.INVISIBLE);
 		mWatermark=(CheckBox)findViewById(R.id.checkBox1);
 		mWatermark.setOnCheckedChangeListener(this);
-		//mWatermark.setChecked(true);
+		
+		mNetInfoTv=(TextView) findViewById(R.id.tv_net);
 		
 		mLivePushConfig = new LivePushConfig();
 		updatePushConfig();
@@ -111,46 +120,56 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                switch (msg.what) {
-                    case LiveConstants.PUSH_ERR_NET_DISCONNECT:
-                    	showMessage("连接断开，请重连");
-                   	 	updateUI(false);
-                        break;
-                    case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
-                    	showMessage("连接失败");
-                   	 	updateUI(false);
-                        break;
-                    case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL:
-                    	updateUI(false);
-                        showMessage("音频发送失败");
-                        break;
-                    case LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL:
-                    	updateUI(false);
-                        showMessage("视频发送失败");
-                        break;
-                    case LiveConstants.PUSH_EVT_CONNECT_SUCC:
-                    	showMessage("连接成功");
-                        break;
-                    case LiveConstants.PUSH_EVT_PUSH_BEGIN:
-                    	updateUI(true);
-                    	showMessage("开始推流");
-                        break;
-                    case LiveConstants.PUSH_EVT_PUSH_END:
-                    	updateUI(false);
-                    	showMessage("结束推流");
-                        break;
-                    case LiveConstants.PLAY_ERR_NET_DECODE_FAIL:
-                    	showMessage("媒体输入打开失败");
-                    	LiveInterface.getInstance().stopPlay();
-               		 	mBtnResize.setEnabled(false);
-               		 	mBtnPlay.setText("play");
-               		 	mPlaying = false; 
-                        break;
-                    default:
-                        break;
+                switch(msg.what){
+	    			case PUBLISH_EVENTINFO_MSG:
+	    				int statusCode = (Integer)msg.obj;
+	    				 switch (statusCode) {
+		                    case LiveConstants.PUSH_ERR_NET_DISCONNECT:
+		                    	showMessage("连接断开，请重连");
+		                   	 	updateUI(false);
+		                        break;
+		                    case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
+		                    	showMessage("连接失败");
+		                   	 	updateUI(false);
+		                        break;
+		                    case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL:
+		                    	updateUI(false);
+		                        showMessage("音频发送失败");
+		                        break;
+		                    case LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL:
+		                    	updateUI(false);
+		                        showMessage("视频发送失败");
+		                        break;
+		                    case LiveConstants.PUSH_EVT_CONNECT_SUCC:
+		                    	showMessage("连接成功");
+		                        break;
+		                    case LiveConstants.PUSH_EVT_PUSH_BEGIN:
+		                    	updateUI(true);
+		                    	showMessage("开始推流");
+		                        break;
+		                    case LiveConstants.PUSH_EVT_PUSH_END:
+		                    	updateUI(false);
+		                    	showMessage("结束推流");
+		                        break;
+		                    case LiveConstants.PLAY_ERR_NET_DECODE_FAIL:
+		                    	showMessage("媒体输入打开失败");
+		                    	LiveInterface.getInstance().stopPlay();
+		               		 	mBtnResize.setEnabled(false);
+		               		 	mBtnPlay.setText("play");
+		               		 	mPlaying = false; 
+		                        break;
+		                    default:
+		                        break;
+	    				 }
+	    				 break;
+		            case PUBLISH_NETINFO_MSG:
+		            	String[] infos=(String[]) msg.obj;
+		            	float bitrate = Float.parseFloat(infos[0]);
+						float lostFrame = Float.parseFloat(infos[1]);
+						float lostFrameRate = Float.parseFloat(infos[2]);						
+						mNetInfoTv.setText(String.format("bitrate: %6.2f kbps\n lostFrame: %6.2f\n lostFrameRate:%6.2f", bitrate, lostFrame, lostFrameRate));
                 }
             }
-
         };
 /*		mRunnable = new Runnable() {
             public void run() {
@@ -291,60 +310,82 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		{
 			mBtnStartLive.setEnabled(true);
 			mBtnStopLive.setEnabled(false);
+			mNetInfoTv.setText("");
 		}
 	}
 	
 	private LiveEventInterface mCaptureStateListener = new LiveEventInterface() {
         @Override
         public void onStateChanged(int eventId) {
-        	Message msg =new Message();
+        	Message msg = Message.obtain(mHandler, PUBLISH_EVENTINFO_MSG);
         	
             switch (eventId) {
                 case LiveConstants.PUSH_ERR_NET_DISCONNECT://断线
                // case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL://连接失败
                 	 Log.i(TAG, "LiveEventInterface disconnect and reconnect"); 
-                	 msg.what = LiveConstants.PUSH_ERR_NET_DISCONNECT;
-                	 mHandler.sendMessage(msg);               	 
+                	 msg.obj = LiveConstants.PUSH_ERR_NET_DISCONNECT;
+                	 msg.sendToTarget();
+//                	 msg.what = LiveConstants.PUSH_ERR_NET_DISCONNECT;
+//                	 mHandler.sendMessage(msg);               	 
                 	 //重连
 					 mHandler.post(mRunnable);					
 	                 break;
                 case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL://连接失败
                     Log.i(TAG, "LiveEventInterface connect failed");
-                    msg.what = LiveConstants.PUSH_ERR_NET_CONNECT_FAIL;
-               	 	mHandler.sendMessage(msg);
+                    msg.obj = LiveConstants.PUSH_ERR_NET_CONNECT_FAIL;
+               	 	msg.sendToTarget();
                     break;
                 case LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL://音频采集编码线程启动失败
                     Log.i(TAG, "LiveEventInterface audio encoder failed");
-                    msg.what = LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL;
-               	 	mHandler.sendMessage(msg);
+                    msg.obj = LiveConstants.PUSH_ERR_AUDIO_ENCODE_FAIL;
+                    msg.sendToTarget();
                     break;
                 case LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL://视频采集编码线程启动失败
                     Log.i(TAG, "LiveEventInterface video encoder failed");
-                    msg.what = LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL;
-               	 	mHandler.sendMessage(msg);
+                    msg.obj = LiveConstants.PUSH_ERR_VIDEO_ENCODE_FAIL;
+                    msg.sendToTarget();
                     break;
                 case LiveConstants.PUSH_EVT_CONNECT_SUCC: //连接成功
                 	Log.i(TAG, "LiveEventInterface connect ok");
-                	msg.what = LiveConstants.PUSH_EVT_CONNECT_SUCC;
-                	mHandler.sendMessage(msg);
+                	msg.obj = LiveConstants.PUSH_EVT_CONNECT_SUCC;
+                	msg.sendToTarget();
                     break;
                 case LiveConstants.PUSH_EVT_PUSH_BEGIN: //开始推流
                 	Log.i(TAG, "LiveEventInterface begin ok");
-                	msg.what = LiveConstants.PUSH_EVT_PUSH_BEGIN;
-                	mHandler.sendMessage(msg);
+                	msg.obj = LiveConstants.PUSH_EVT_PUSH_BEGIN;
+                	msg.sendToTarget();
                     break;
                 case LiveConstants.PUSH_EVT_PUSH_END: //推流结束
                 	Log.i(TAG, "LiveEventInterface publish end");
-                	msg.what = LiveConstants.PUSH_EVT_PUSH_END;
-                	mHandler.sendMessage(msg);
+                	msg.obj = LiveConstants.PUSH_EVT_PUSH_END;
+                	msg.sendToTarget();
                     break;
                 case LiveConstants.PLAY_ERR_NET_DECODE_FAIL: //媒体输入打开失败
                 	Log.i(TAG, "LiveEventInterface player failed");
-                	msg.what = LiveConstants.PLAY_ERR_NET_DECODE_FAIL;
-                	mHandler.sendMessage(msg);
+                	msg.obj = LiveConstants.PLAY_ERR_NET_DECODE_FAIL;
+                	msg.sendToTarget();
                     break;    
             }
         }
+    };
+
+    private LiveNetStateInterface mPublishNetstateListener = new LiveNetStateInterface() {
+
+		@Override
+		public void onNetStateBack(String state) {
+			// TODO Auto-generated method stub
+			Message msg =Message.obtain(mHandler, PUBLISH_NETINFO_MSG);
+			if(state != null){
+				String[] strMsg = state.split("\\|");
+				for(int i=0; i < strMsg.length; i++){
+					Log.i("ss","________________________msg["+i+"]:"+strMsg[i]);
+				}
+				Log.i(TAG, "LiveNetStateInterface back"); 
+				msg.obj=strMsg;
+				msg.sendToTarget();
+			}
+		}
+    	
     };
     
 	private void updatePushConfig()
@@ -360,6 +401,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setWeaknetOptition(mWeaknetOptition);
 		mLivePushConfig.setVideoResolution(mPublishOrientation);
 		mLivePushConfig.setAutoRotation(mAutoRotate);
+		mLivePushConfig.setNetstateInterface(mPublishNetstateListener);
 		if(0 == mEncodeMode)
 		{
 			mLivePushConfig.setHWVideoEncode(false);

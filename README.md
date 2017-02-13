@@ -142,6 +142,30 @@ private LiveEventInterface mCaptureStateListener = new LiveEventInterface() {
         }
     };
 
+- 创建推流码率丢包率监听，可以收到推流过程中实时码率和丢包率。
+LiveNetStateInterface mPublishNetstateListener = new LiveNetStateInterface() 可以接收到实时的码率和丢包率信息。
+
+**注意：所有回调直接运行在产生事件的各工作线程中，不要在该回调中做任何耗时的操作，或者直接调用推流API。**
+````java
+ private LiveNetStateInterface mPublishNetstateListener = new LiveNetStateInterface() {
+
+		@Override
+		public void onNetStateBack(String state) {
+			// TODO Auto-generated method stub
+			Message msg =Message.obtain(mHandler, PUBLISH_NETINFO_MSG);
+			if(state != null){
+				String[] strMsg = state.split("\\|");
+				for(int i=0; i < strMsg.length; i++){
+					Log.i("ss","________________________msg["+i+"]:"+strMsg[i]);
+				}
+				Log.i(TAG, "LiveNetStateInterface back"); 
+				msg.obj=strMsg;
+				msg.sendToTarget();
+			}
+		}
+    	
+    };
+	
 ````
 -------- 初始化推流，开启摄像头
 ````java
