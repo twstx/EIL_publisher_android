@@ -18,6 +18,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持镜头变焦功能:变焦级别可设(需要取手机支持的摄像头变焦范围)
 * [x] 支持媒体输入功能:rtmp流输入画中画显示（目前只有横屏推流模式支持）
 * [x] 支持画中画画面切换功能
+* [x] 支持闪光灯开关功能
 
 二. 运行环境
 
@@ -63,9 +64,13 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 <uses-permission android:name="android.permission.FLASHLIGHT" />
 <uses-permission android:name="android.permission.VIBRATE" />
+<uses-permission android:name="android.permission.READ_LOGS" />
+<uses-permission android:name="android.permission.FLASHLIGHT"/>
+<uses-permission android:name="android.permission.WAKE_LOCK"/>
 <!-- 硬件特性 -->
 <uses-feature android:name="android.hardware.camera" />
 <uses-feature android:name="android.hardware.camera.autofocus" />
+
 ````
 
  3.4 简单推流示例
@@ -204,6 +209,10 @@ LiveInterface.getInstance().setFilterLevel(level);
 -------- 设置镜头变焦级别
 ````java
 LiveInterface.getInstance().setZoomLevel(ZoomLevel);
+````
+-------- 闪光灯开关
+````java
+LiveInterface.getInstance().setFlashLightState(true/false);
 ````
 -------- 获取上传速度
 ````java

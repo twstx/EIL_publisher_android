@@ -47,6 +47,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="record" />
+
+        <CheckBox
+            android:id="@+id/check_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="light" />
+
     </LinearLayout>
 
      <LinearLayout

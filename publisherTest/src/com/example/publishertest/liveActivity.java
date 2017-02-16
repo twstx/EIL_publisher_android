@@ -41,6 +41,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnStopLive;
 	private Button mBtnSwitchCam;
 	private Button mBtnRecord;
+	private CheckBox mLight;
 	private TextView mText;
 	CheckBox mWatermark;
 	private Button mBtnPlay;
@@ -102,6 +103,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mBtnResize = (Button) findViewById(R.id.btn_resize);
 		mBtnResize.setOnClickListener(this);
 		mBtnResize.setEnabled(false);
+		mLight = (CheckBox) findViewById(R.id.check_light);
+		mLight.setOnCheckedChangeListener(this);
 		
 		mText = (TextView)findViewById(R.id.tv);
 		mText.setVisibility(View.INVISIBLE);
@@ -484,11 +487,26 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		// TODO Auto-generated method stub
-		 if(isChecked){ 
-			 LiveInterface.getInstance().setWaterMarkState(true);
-         }else{ 
-        	 LiveInterface.getInstance().setWaterMarkState(false);
-         } 
+		switch(buttonView.getId())
+		{
+			case R.id.checkBox1:
+				 if(isChecked){ 
+					 LiveInterface.getInstance().setWaterMarkState(true);
+		         }else{ 
+		        	 LiveInterface.getInstance().setWaterMarkState(false);
+		         } 
+				 break;
+			case R.id.check_light:
+				if(isChecked){ 
+					 LiveInterface.getInstance().setFlashLightState(true);
+		         }else{ 
+		        	 LiveInterface.getInstance().setFlashLightState(false);
+		         }
+				break;
+			default:
+				break;
+		}
+		
 	}	
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
