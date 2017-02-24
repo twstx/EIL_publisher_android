@@ -23,7 +23,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 二. 运行环境
 
 * 最低支持版本为Android 4.4 (API level 19)
-* 支持的cpu架构：armv7
+* 支持的cpu架构：armv5、armv7a、arm64、x86
   
 三. 快速集成
 
@@ -41,7 +41,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 - publisherTest: 示例工程，演示本SDK主要接口功能的使用
 - doc: SDK说明文档
 - libs: 集成SDK需要的所有库文件
-    - libs/[armeabi-v7a]: so库
+    - libs: so库
     - libs/EILPublisher.jar: 推流SDK jar包
 
  3.3 配置项目
