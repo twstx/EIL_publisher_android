@@ -161,6 +161,14 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		               		 	mBtnPlay.setText("play");
 		               		 	mPlaying = false; 
 		                        break;
+		                    case LiveConstants.PUSH_ERR_OPEN_MIC_FAIL:
+		                    	updateUI(false);
+		                    	showMessage("麦克风打开失败");
+		                    	break;
+		                    case LiveConstants.PUSH_ERR_PUSH_FAIL:
+		                    	updateUI(false);
+		                    	showMessage("推流失败");
+		                    	break;
 		                    default:
 		                        break;
 	    				 }
@@ -366,6 +374,16 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
                 case LiveConstants.PLAY_ERR_NET_DECODE_FAIL: //媒体输入打开失败
                 	Log.i(TAG, "LiveEventInterface player failed");
                 	msg.obj = LiveConstants.PLAY_ERR_NET_DECODE_FAIL;
+                	msg.sendToTarget();
+                    break; 
+                case LiveConstants.PUSH_ERR_OPEN_MIC_FAIL:
+                	Log.i(TAG, "LiveEventInterface open mic failed");
+                	msg.obj = LiveConstants.PUSH_ERR_OPEN_MIC_FAIL;
+                	msg.sendToTarget();
+                	break;
+                case LiveConstants.PUSH_ERR_PUSH_FAIL:
+                	Log.i(TAG, "LiveEventInterface publish failed");
+                	msg.obj = LiveConstants.PUSH_ERR_PUSH_FAIL;
                 	msg.sendToTarget();
                     break;    
             }
