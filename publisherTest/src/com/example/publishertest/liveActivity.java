@@ -120,6 +120,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		updatePushConfig();
 		mSurfaceView=(GLSurfaceView)findViewById(R.id.surfaceView1);
 		LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
+		LiveInterface.getInstance().resume();
 		
 		mHandler=new Handler()
         {
@@ -214,7 +215,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		LiveInterface.getInstance().resume();
+		//LiveInterface.getInstance().resume();
 	}
 
 	@Override
@@ -228,7 +229,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		LiveInterface.getInstance().pause();
+		//LiveInterface.getInstance().pause();
 	}
 	
 	@Override
