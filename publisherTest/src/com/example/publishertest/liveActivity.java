@@ -42,6 +42,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnSwitchCam;
 	private Button mBtnRecord;
 	private CheckBox mLight;
+	private CheckBox mMirror;
 	private TextView mText;
 	CheckBox mWatermark;
 	private Button mBtnPlay;
@@ -105,6 +106,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mBtnResize.setEnabled(false);
 		mLight = (CheckBox) findViewById(R.id.check_light);
 		mLight.setOnCheckedChangeListener(this);
+		mMirror = (CheckBox) findViewById(R.id.check_mirror);
+		mMirror.setOnCheckedChangeListener(this);
 		
 		mText = (TextView)findViewById(R.id.tv);
 		mText.setVisibility(View.INVISIBLE);
@@ -130,6 +133,14 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		                    case LiveConstants.PUSH_ERR_NET_DISCONNECT:
 		                    	showMessage("连接断开，请重连");
 		                   	 	updateUI(false);
+//								try {
+//									Thread.sleep(10000);
+//								} catch (InterruptedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//			                   	LiveInterface.getInstance().start(mRtmpUrl);
+//			        			mPublishing = true;
 		                        break;
 		                    case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
 		                    	showMessage("连接失败");
@@ -521,6 +532,12 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		        	 LiveInterface.getInstance().setFlashLightState(false);
 		         }
 				break;
+			case R.id.check_mirror:
+				if(isChecked){
+					LiveInterface.getInstance().setMirrorState(true);
+				}else{
+					LiveInterface.getInstance().setMirrorState(false);
+				}
 			default:
 				break;
 		}

@@ -28,8 +28,8 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 	public RadioButton mRadio480, mRadio360,mRadio720;
 	public RadioButton mRadioEncHW, mRadioEncSW;
 	public RadioButton mPublishH, mPublishV;
-	//private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
-	static String mRtmpUrl = "rtmp://pili-publish.qdtong.net/leju-live-2/58b3e13e38d57?key=03ed84c6b3039254&token=ejutest";
+	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
+	//static String mRtmpUrl = "rtmp://pili-publish.qdtong.net/leju-live-2/58b3e13e38d57?key=03ed84c6b3039254&token=ejutest";
 	private String mPlayUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
 	CheckBox mWeeknet,mAutoRotate;
 	private List<CheckBox> checkBoxs=new ArrayList<CheckBox>();

@@ -19,6 +19,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持媒体输入功能:rtmp流输入画中画显示（目前只有横屏推流模式支持）
 * [x] 支持画中画画面切换功能
 * [x] 支持闪光灯开关功能
+* [x] 支持镜像推流功能
 
 二. 运行环境
 
@@ -213,6 +214,10 @@ LiveInterface.getInstance().setZoomLevel(ZoomLevel);
 -------- 闪光灯开关
 ````java
 LiveInterface.getInstance().setFlashLightState(true/false);
+````
+-------- 镜像推流开关
+````java
+LiveInterface.getInstance().setMirrorState(true/false);
 ````
 -------- 获取上传速度
 ````java
