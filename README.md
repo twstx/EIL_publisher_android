@@ -20,6 +20,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持画中画画面切换功能
 * [x] 支持闪光灯开关功能
 * [x] 支持镜像推流功能
+* [x] 支持断线后自动重连功能
 
 二. 运行环境
 
@@ -99,6 +100,9 @@ LivePushConfig mLivePushConfig = new LivePushConfig();
 mLivePushConfig.setAppContext(this);
 // 设置推流url
 mLivePushConfig.setRtmpUrl("rtmp://test.uplive.xxx.com/live/{streamName}");
+//设置清晰度（支持3档清晰度：DEFINITION_STANDARD标清  DEFINITION_HIGH高清  DEFINITION_SUPER超清）
+//用户也可自定义分辨率、码率及帧率，同时调用优先支持清晰度设置。
+mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_STANDARD);
 // 设置推流分辨率,需要手机支持的分辨率，sdk内部会进行判断，如果设置的分辨率手机不支持，会无法推流
 mLivePushConfig.setVideoSize(640,480);
 // 设置视频帧率
@@ -131,8 +135,7 @@ mLivePushConfig.setAutoRotation(true);(true：打开；false：关闭 )默认为
 LivePushConfig mLivePushConfig = new LivePushConfig();
 ````
 - 创建推流事件监听，可以收到推流过程中的异步事件。
-LiveEventInterface mCaptureStateListener = new LiveEventInterface() 可以接收到错误通知，一般是发生了严重错误，比如断网等,SDK内部会停止推流。
-重连时只需要重新开始推流即可，重连的策略可以自定义。
+LiveEventInterface mCaptureStateListener = new LiveEventInterface() 可以接收到错误通知，一般是发生了严重错误，如发生断网,SDK内部会自动重连。
 
 **注意：所有回调直接运行在产生事件的各工作线程中，不要在该回调中做任何耗时的操作，或者直接调用推流API。**
 ````java

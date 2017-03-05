@@ -116,12 +116,6 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		
 		mNetInfoTv=(TextView) findViewById(R.id.tv_net);
 		
-		mLivePushConfig = new LivePushConfig();
-		updatePushConfig();
-		mSurfaceView=(GLSurfaceView)findViewById(R.id.surfaceView1);
-		LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
-		LiveInterface.getInstance().resume();
-		
 		mHandler=new Handler()
         {
             @Override
@@ -133,7 +127,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	    				 switch (statusCode) {
 		                    case LiveConstants.PUSH_ERR_NET_DISCONNECT:
 		                    	showMessage("连接断开，请重连");
-		                   	 	updateUI(false);
+		                   	 	//updateUI(false);
 //								try {
 //									Thread.sleep(10000);
 //								} catch (InterruptedException e) {
@@ -181,6 +175,16 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		                    	updateUI(false);
 		                    	showMessage("推流失败");
 		                    	break;
+		                    case LiveConstants.PUSH_ERR_OPEN_CAMERA_FAIL:
+		                    	updateUI(false);
+		                    	showMessage("摄像头开启失败");
+		                    	break;
+		                    case LiveConstants.PUSH_ERR_NET_RECONNECT_FAIL:
+		                    	showMessage("重连失败");
+		                    	break;
+		                    case LiveConstants.PUSH_ERR_NET_RECONNECT_SUCC:
+		                    	showMessage("重连成功");
+		                    	break;
 		                    default:
 		                        break;
 	    				 }
@@ -194,21 +198,15 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
                 }
             }
         };
-/*		mRunnable = new Runnable() {
-            public void run() {
-            	 Log.i(TAG, "LiveEventInterface disconnect and reconnect init"); 
-            	 try {
-					   	Thread.sleep(10000);
-					 } catch (InterruptedException e) {
-						 // TODO Auto-generated catch block
-						 e.printStackTrace();
-					 }
-				 LiveInterface.getInstance().start(); 			 
-             }
-        };
-	*/	
+        
 		mFilterLevelBar = (SeekBar) findViewById(R.id.seekBar1);
         mFilterLevelBar.setOnSeekBarChangeListener(this);
+        
+        mLivePushConfig = new LivePushConfig();
+		updatePushConfig();
+		mSurfaceView=(GLSurfaceView)findViewById(R.id.surfaceView1);
+		LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
+		LiveInterface.getInstance().resume();
 	}
 	
 	@Override
@@ -340,6 +338,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private LiveEventInterface mCaptureStateListener = new LiveEventInterface() {
         @Override
         public void onStateChanged(int eventId) {
+        	if(null == mHandler)
+        	{
+        		return;
+        	}
         	Message msg = Message.obtain(mHandler, PUBLISH_EVENTINFO_MSG);
         	
             switch (eventId) {
@@ -397,7 +399,22 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
                 	Log.i(TAG, "LiveEventInterface publish failed");
                 	msg.obj = LiveConstants.PUSH_ERR_PUSH_FAIL;
                 	msg.sendToTarget();
-                    break;    
+                	break;
+                case LiveConstants.PUSH_ERR_OPEN_CAMERA_FAIL:
+                	Log.i(TAG, "LiveEventInterface open camera failed");
+                	msg.obj = LiveConstants.PUSH_ERR_OPEN_CAMERA_FAIL;
+                	msg.sendToTarget();
+                	break;
+                case LiveConstants.PUSH_ERR_NET_RECONNECT_SUCC:
+                	Log.i(TAG, "LiveEventInterface reconnect success");
+                	msg.obj = LiveConstants.PUSH_ERR_NET_RECONNECT_SUCC;
+                	msg.sendToTarget();
+                	break;
+                case LiveConstants.PUSH_ERR_NET_RECONNECT_FAIL:
+                	Log.i(TAG, "LiveEventInterface reconnect failed");
+                	msg.obj = LiveConstants.PUSH_ERR_NET_RECONNECT_FAIL;
+                	msg.sendToTarget();
+                	break;
             }
         }
     };
@@ -446,40 +463,49 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		switch(mDefinitionMode)
 		{
 			case 0:
-				if(0 == mPublishOrientation)
-				{
-					mLivePushConfig.setVideoSize(640,360);
-				}else
-				{
-					mLivePushConfig.setVideoSize(360,640);
-				}
-				
-				mLivePushConfig.setVideoFPS(20);
-				mLivePushConfig.setVideoBitrate(800);
+				//默认清晰度配置
+				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_STANDARD);
+				//自定义分辨率、码率、帧率
+//				if(0 == mPublishOrientation%2)
+//				{
+//					mLivePushConfig.setVideoSize(640,360);
+//				}else
+//				{
+//					mLivePushConfig.setVideoSize(360,640);
+//				}
+//				
+//				mLivePushConfig.setVideoFPS(20);
+//				mLivePushConfig.setVideoBitrate(800);
 				break;
 			case 1:
-				if(0 == mPublishOrientation)
-				{
-					mLivePushConfig.setVideoSize(848,480);
-				}else
-				{
-					mLivePushConfig.setVideoSize(480,848);
-				}
-				
-				mLivePushConfig.setVideoFPS(20);
-				mLivePushConfig.setVideoBitrate(1000);
+				//默认清晰度配置
+				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_HIGH);
+				//自定义分辨率、码率、帧率
+//				if(0 == mPublishOrientation%2)
+//				{
+//					mLivePushConfig.setVideoSize(848,480);
+//				}else
+//				{
+//					mLivePushConfig.setVideoSize(480,848);
+//				}
+//				
+//				mLivePushConfig.setVideoFPS(20);
+//				mLivePushConfig.setVideoBitrate(1000);
 				break;
 			case 2:
-				if(0 == mPublishOrientation)
-				{
-					mLivePushConfig.setVideoSize(1280,720);
-				}else
-				{
-					mLivePushConfig.setVideoSize(720,1280);
-				}
-				
-				mLivePushConfig.setVideoFPS(15);
-				mLivePushConfig.setVideoBitrate(1200);
+				//默认清晰度配置
+				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_SUPER);
+				//自定义分辨率、码率、帧率
+//				if(0 == mPublishOrientation%2)
+//				{
+//					mLivePushConfig.setVideoSize(1280,720);
+//				}else
+//				{
+//					mLivePushConfig.setVideoSize(720,1280);
+//				}
+//				
+//				mLivePushConfig.setVideoFPS(15);
+//				mLivePushConfig.setVideoBitrate(1200);
 				break;	
 		}		
 	}
