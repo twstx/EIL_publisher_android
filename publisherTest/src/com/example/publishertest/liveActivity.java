@@ -126,16 +126,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	    				int statusCode = (Integer)msg.obj;
 	    				 switch (statusCode) {
 		                    case LiveConstants.PUSH_ERR_NET_DISCONNECT:
-		                    	showMessage("连接断开，请重连");
-		                   	 	//updateUI(false);
-//								try {
-//									Thread.sleep(10000);
-//								} catch (InterruptedException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
-//			                   	LiveInterface.getInstance().start(mRtmpUrl);
-//			        			mPublishing = true;
+		                    	showMessage("连接断开，自动重连中");
 		                        break;
 		                    case LiveConstants.PUSH_ERR_NET_CONNECT_FAIL:
 		                    	showMessage("连接失败");
