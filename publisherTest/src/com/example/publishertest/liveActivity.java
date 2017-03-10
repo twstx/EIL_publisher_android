@@ -48,6 +48,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnPlay;
 	private Button mBtnResize;
 	private static TextView mNetInfoTv;
+	private CheckBox mMute;
 	
 	private LivePushConfig mLivePushConfig;
 	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
@@ -115,6 +116,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mWatermark.setOnCheckedChangeListener(this);
 		
 		mNetInfoTv=(TextView) findViewById(R.id.tv_net);
+		
+		mMute=(CheckBox)findViewById(R.id.checkMute);
+		mMute.setOnCheckedChangeListener(this);
 		
 		mHandler=new Handler()
         {
@@ -555,6 +559,14 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 				}else{
 					LiveInterface.getInstance().setMirrorState(false);
 				}
+				break;
+			case R.id.checkMute:
+				if(isChecked){
+					LiveInterface.getInstance().setMuteModeState(true);
+				}else{
+					LiveInterface.getInstance().setMuteModeState(false);
+				}
+				break;
 			default:
 				break;
 		}
