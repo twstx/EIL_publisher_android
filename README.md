@@ -231,11 +231,19 @@ LiveInterface.getInstance().setMuteModeState(true/false);
 ````java
 LiveInterface.getInstance().getUploadRate();
 ````
--------- 开启媒体输入
+-------- 打开媒体输入
 ````java
- LiveInterface.getInstance().startPlay(mPlayUrl);
+ LiveInterface.getInstance().openPlay(mPlayUrl);
 ````
 -------- 关闭媒体输入
+````java
+LiveInterface.getInstance().closePlay();
+````
+-------- 开始播放媒体输入
+````java
+ LiveInterface.getInstance().startPlay();
+````
+-------- 结束播放媒体输入
 ````java
 LiveInterface.getInstance().stopPlay();
 ````

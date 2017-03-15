@@ -287,12 +287,14 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         	 if(mPlaying)
         	 {
         		 LiveInterface.getInstance().stopPlay();
+        		 LiveInterface.getInstance().closePlay();
         		 mBtnResize.setEnabled(false);
         		 mBtnPlay.setText("play");
         		 mPlaying = false; 
         	 }else
         	 {
-        		 LiveInterface.getInstance().startPlay(mPlayUrl);
+        		 LiveInterface.getInstance().openPlay(mPlayUrl);
+        		 LiveInterface.getInstance().startPlay();
         		 mBtnResize.setEnabled(true);
         		 mBtnPlay.setText("stopPlay");
         		 mPlaying = true;
