@@ -45,6 +45,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private CheckBox mMirror;
 	private TextView mText;
 	CheckBox mWatermark;
+	private Button mBtnOpenPlay;
 	private Button mBtnPlay;
 	private Button mBtnResize;
 	private static TextView mNetInfoTv;
@@ -57,6 +58,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	static int mEncodeMode = 1;//Ä¬ÈÏÓ²±àÂë
 	private boolean mRecording = false;
 	private boolean mPublishing = false;
+	private boolean mOpenPlaying = false;
 	private boolean mPlaying = false;
 	static boolean mWeaknetOptition = true;
 	static int mPublishOrientation = 0;
@@ -100,6 +102,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mBtnSwitchCam.setOnClickListener(this);
 		mBtnRecord = (Button) findViewById(R.id.btn_record);
 		mBtnRecord.setOnClickListener(this);
+		mBtnOpenPlay = (Button) findViewById(R.id.btn_openPlay);
+		mBtnOpenPlay.setOnClickListener(this);
 		mBtnPlay = (Button) findViewById(R.id.btn_play);
 		mBtnPlay.setOnClickListener(this);
 		mBtnResize = (Button) findViewById(R.id.btn_resize);
@@ -283,17 +287,31 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         	 }
         	 
              break;
+         case R.id.btn_openPlay:
+        	 if(mOpenPlaying)
+        	 {
+        		 LiveInterface.getInstance().closePlay();
+        		 mBtnOpenPlay.setText("openPlay");
+        		 mOpenPlaying = false;
+        		 mBtnPlay.setEnabled(false);
+        	 }else
+        	 {
+        		 LiveInterface.getInstance().openPlay(mPlayUrl);
+        		 mBtnOpenPlay.setText("closePlay");
+        		 mOpenPlaying = true;
+        		 mBtnPlay.setEnabled(true);       		 
+        	 }
+        	 
+             break;
          case R.id.btn_play:
         	 if(mPlaying)
         	 {
-        		 LiveInterface.getInstance().stopPlay();
-        		 LiveInterface.getInstance().closePlay();
+        		 LiveInterface.getInstance().stopPlay();       		 
         		 mBtnResize.setEnabled(false);
         		 mBtnPlay.setText("play");
         		 mPlaying = false; 
         	 }else
         	 {
-        		 LiveInterface.getInstance().openPlay(mPlayUrl);
         		 LiveInterface.getInstance().startPlay();
         		 mBtnResize.setEnabled(true);
         		 mBtnPlay.setText("stopPlay");
