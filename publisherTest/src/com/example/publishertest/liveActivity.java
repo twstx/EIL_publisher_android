@@ -9,6 +9,7 @@ import com.eil.eilpublisher.media.LivePushConfig;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioFormat;
@@ -61,7 +62,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private boolean mOpenPlaying = false;
 	private boolean mPlaying = false;
 	static boolean mWeaknetOptition = true;
-	static int mPublishOrientation = 0;
+	static int mPublishOrientation = 1;
 	static boolean mAutoRotate = false;
 	private SeekBar mFilterLevelBar;
 	
@@ -86,13 +87,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 				
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-		if(0 == mPublishOrientation)
-		{
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		}else
-		{
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		}
+//		if(0 == mPublishOrientation%2)
+//		{
+//			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//		}else
+//		{
+//			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//		}
 		mBtnStartLive = (Button) findViewById(R.id.btn_start);
 		mBtnStartLive.setOnClickListener(this);
 		mBtnStopLive = (Button) findViewById(R.id.btn_stop);
@@ -161,7 +162,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		                        break;
 		                    case LiveConstants.PLAY_ERR_NET_DECODE_FAIL:
 		                    	showMessage("媒体输入打开失败");
-		                    	LiveInterface.getInstance().stopPlay();
+//		                    	LiveInterface.getInstance().stopPlay();
 		               		 	mBtnResize.setEnabled(false);
 		               		 	mBtnPlay.setText("play");
 		               		 	mPlaying = false; 
@@ -253,6 +254,28 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		 }
 		 mWatermark.setChecked(false);
 	}
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        //	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        	LiveInterface.getInstance().setLandscape();
+        	mPublishOrientation=0;
+        	updatePushConfig();
+        	LiveInterface.getInstance().updateConfig(mLivePushConfig);
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        //	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        	LiveInterface.getInstance().setPortrait();
+        	mPublishOrientation=1;
+        	updatePushConfig();
+        	LiveInterface.getInstance().updateConfig(mLivePushConfig);
+
+        }
+    }
 	
 	@Override
 	public void onClick(View v) {
@@ -477,49 +500,43 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		switch(mDefinitionMode)
 		{
 			case 0:
-				//默认清晰度配置
-				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_STANDARD);
-				//自定义分辨率、码率、帧率
-//				if(0 == mPublishOrientation%2)
-//				{
-//					mLivePushConfig.setVideoSize(640,360);
-//				}else
-//				{
-//					mLivePushConfig.setVideoSize(360,640);
-//				}
-//				
-//				mLivePushConfig.setVideoFPS(20);
-//				mLivePushConfig.setVideoBitrate(800);
+//				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_STANDARD);
+				if(0 == mPublishOrientation%2)
+				{
+					mLivePushConfig.setVideoSize(640,360);
+				}else
+				{
+					mLivePushConfig.setVideoSize(360,640);
+				}
+				
+				mLivePushConfig.setVideoFPS(20);
+				mLivePushConfig.setVideoBitrate(800);
 				break;
 			case 1:
-				//默认清晰度配置
-				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_HIGH);
-				//自定义分辨率、码率、帧率
-//				if(0 == mPublishOrientation%2)
-//				{
-//					mLivePushConfig.setVideoSize(848,480);
-//				}else
-//				{
-//					mLivePushConfig.setVideoSize(480,848);
-//				}
-//				
-//				mLivePushConfig.setVideoFPS(20);
-//				mLivePushConfig.setVideoBitrate(1000);
+//				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_HIGH);
+				if(0 == mPublishOrientation%2)
+				{
+					mLivePushConfig.setVideoSize(848,480);
+				}else
+				{
+					mLivePushConfig.setVideoSize(480,848);
+				}
+				
+				mLivePushConfig.setVideoFPS(20);
+				mLivePushConfig.setVideoBitrate(1000);
 				break;
 			case 2:
-				//默认清晰度配置
-				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_SUPER);
-				//自定义分辨率、码率、帧率
-//				if(0 == mPublishOrientation%2)
-//				{
-//					mLivePushConfig.setVideoSize(1280,720);
-//				}else
-//				{
-//					mLivePushConfig.setVideoSize(720,1280);
-//				}
-//				
-//				mLivePushConfig.setVideoFPS(15);
-//				mLivePushConfig.setVideoBitrate(1200);
+//				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_SUPER);
+				if(0 == mPublishOrientation%2)
+				{
+					mLivePushConfig.setVideoSize(1280,720);
+				}else
+				{
+					mLivePushConfig.setVideoSize(720,1280);
+				}
+				
+				mLivePushConfig.setVideoFPS(15);
+				mLivePushConfig.setVideoBitrate(1200);
 				break;	
 		}		
 	}
@@ -546,7 +563,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	
 	public static void setVideoOrientation(int orientation)
 	{
-		mPublishOrientation = orientation;
+		//mPublishOrientation = orientation;
 	}
 	
 	public static void setAutoRotateState(boolean state)
