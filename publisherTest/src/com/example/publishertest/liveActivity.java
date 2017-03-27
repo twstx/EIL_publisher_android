@@ -12,6 +12,8 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.media.AudioFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -645,6 +647,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		switch (e.getAction()&MotionEvent.ACTION_MASK)
 		{  
 		   case MotionEvent.ACTION_DOWN://手指下压   
+			   Point point = new Point(0,0);			  
+			   point.x =  (int) e.getX();
+			   point.y = (int) e.getY();
+			   LiveInterface.getInstance().setManualFocus(point);
 			    break;  
 		   case MotionEvent.ACTION_MOVE://手指在屏幕移动，改事件会不断被调用  
 			   if (e.getPointerCount()>=2)

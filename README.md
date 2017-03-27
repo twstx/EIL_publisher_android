@@ -228,6 +228,10 @@ LiveInterface.getInstance().setMirrorState(true/false);
 ````java
 LiveInterface.getInstance().setMuteModeState(true/false);
 ````
+-------- 手动对焦
+````java
+LiveInterface.getInstance().setManualFocus(point);
+````
 -------- 设置横屏预览
 ````java
 LiveInterface.getInstance().setLandscape();
