@@ -135,6 +135,14 @@
             android:layout_height="wrap_content"
             android:text="mute" />
 
+     
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
     </LinearLayout>
     
      <TextView

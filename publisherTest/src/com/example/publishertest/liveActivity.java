@@ -1,4 +1,6 @@
 package com.example.publishertest;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveEventInterface;
 import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveNetStateInterface;
@@ -19,6 +21,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -26,12 +29,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +70,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private boolean mPublishing = false;
 	private boolean mOpenPlaying = false;
 	private boolean mPlaying = false;
+	private boolean mPicturing = false;
 	static boolean mWeaknetOptition = true;
 	static int mPublishOrientation = 1;
 	static boolean mAutoRotate = false;
@@ -74,6 +82,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private float lastDestance;//ø™ ºæ‡¿Î  
 	private float currentDestance;//Ω· ¯æ‡¿Î
 	private int curZoomLevel = 1;
+	private ArrayAdapter<String> adapterPic;
+    private Spinner spinnerPic;
+    private List<String> list = new ArrayList<String>();   
 
 	
 	public static final int PUBLISH_EVENTINFO_MSG=1;
@@ -126,6 +137,28 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		
 		mMute=(CheckBox)findViewById(R.id.checkMute);
 		mMute.setOnCheckedChangeListener(this);
+				
+		list.add("none");    
+	    list.add("pic1");    
+	    list.add("pic2");    
+	    list.add("pic3");       
+	        
+		spinnerPic = (Spinner)findViewById(R.id.spinner1);
+		adapterPic =  new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
+		spinnerPic.setAdapter(adapterPic);   
+		spinnerPic.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, 
+                    int pos, long id) {
+            	parent.setVisibility(View.VISIBLE); 
+                updatePic(pos);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            	parent.setVisibility(View.VISIBLE);  
+            }
+        });
 		
 		mHandler=new Handler()
         {
@@ -210,6 +243,38 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
 	}
 	
+	protected void updatePic(int id) {
+		// TODO Auto-generated method stub
+		 Bitmap picImage ;
+		switch(id)
+		{
+		case 0:
+			if(mPicturing)
+			{
+				LiveInterface.getInstance().stopPic();
+				mPicturing = false;
+			}			
+			break;
+		case 1:
+			picImage = BitmapFactory.decodeFile("/sdcard/tim1.jpg");
+    		LiveInterface.getInstance().startPic(picImage);
+    		mPicturing = true;
+			break;
+		case 2:
+			picImage = BitmapFactory.decodeFile("/sdcard/tim2.jpg");
+    		LiveInterface.getInstance().startPic(picImage);
+    		mPicturing = true;
+			break;
+		case 3:
+			picImage = BitmapFactory.decodeFile("/sdcard/tim3.jpg");
+    		LiveInterface.getInstance().startPic(picImage);
+    		mPicturing = true;
+			break;
+		default:
+			break;
+		}
+	}
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub

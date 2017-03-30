@@ -23,6 +23,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持断线后自动重连功能
 * [x] 支持静音功能
 * [x] 支持预览画面横竖屏切换
+* [x] 支持图片导播
 
 二. 运行环境
 
@@ -231,6 +232,14 @@ LiveInterface.getInstance().setMuteModeState(true/false);
 -------- 手动对焦
 ````java
 LiveInterface.getInstance().setManualFocus(point);
+````
+-------- 开启图片导播
+````java
+LiveInterface.getInstance().startPic(Bitmap);
+````
+-------- 关闭图片导播
+````java
+LiveInterface.getInstance().stopPic();
 ````
 -------- 设置横屏预览
 ````java
