@@ -121,27 +121,27 @@
              android:layout_height="wrap_content"
              android:layout_alignLeft="@+id/linearLayout2"
              android:layout_centerVertical="true"
-             android:text="推流方向" />
+             android:text="画中画位置" />
 
           <RadioGroup
             android:id="@+id/radioGroup3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            	android:orientation="horizontal"
-            android:contentDescription="推流方向" >
+            android:contentDescription="画中画位置" >
         
          <RadioButton
              android:id="@+id/radioH"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:checked="true"
-             android:text="横屏" />
+             android:text="左上" />
 
          <RadioButton
              android:id="@+id/radioV"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:text="竖屏" />
+             android:text="右上" />
          </RadioGroup>
      </LinearLayout>
 

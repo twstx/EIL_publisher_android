@@ -134,6 +134,8 @@ mLivePushConfig.setWeaknetOptition(true);(true：打开；false：关闭）默�
 mLivePushConfig.setVideoResolution(mPublishOrientation);（0：横屏；1：竖屏）默认为横屏
 //设置推流视频方向自适应开关
 mLivePushConfig.setAutoRotation(true);(true：打开；false：关闭 )默认为关闭状态
+//设置画中画显示位置
+mLivePushConfig.setPlayerPosition(960, 180, 320, 180);
 // 创建LivePushConfig对象
 LivePushConfig mLivePushConfig = new LivePushConfig();
 ````

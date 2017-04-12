@@ -75,6 +75,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	static int mPublishOrientation = 1;
 	static boolean mAutoRotate = false;
 	private SeekBar mFilterLevelBar;
+	private static int mPicPos = 0;
 	
 	Handler mHandler = null; 
 	Runnable mRunnable;
@@ -556,6 +557,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setVideoResolution(mPublishOrientation);
 		mLivePushConfig.setAutoRotation(mAutoRotate);
 		mLivePushConfig.setNetstateInterface(mPublishNetstateListener);
+		if(0 == mPicPos)
+		{
+			mLivePushConfig.setPlayerPosition(0, 180, 320, 180);
+		}else{
+			mLivePushConfig.setPlayerPosition(960, 180, 320, 180);
+		}
+		
 		if(0 == mEncodeMode)
 		{
 			mLivePushConfig.setHWVideoEncode(false);
@@ -630,7 +638,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	
 	public static void setVideoOrientation(int orientation)
 	{
-		//mPublishOrientation = orientation;
+		mPicPos = orientation;
 	}
 	
 	public static void setAutoRotateState(boolean state)
