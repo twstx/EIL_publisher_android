@@ -161,4 +161,12 @@
           android:layout_alignParentRight="true"
           android:layout_below="@+id/tv" />
 
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_net"
+            android:textColor="#ff0000" />
+
 </RelativeLayout>

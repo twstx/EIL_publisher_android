@@ -286,3 +286,6 @@ LiveInterface.getInstance().stop();
 -------- 关闭摄像头，释放资源
 ````java
 LiveInterface.getInstance().uninit();
+-------- 获取版本号
+````java
+LiveInterface.getInstance().getVersion();

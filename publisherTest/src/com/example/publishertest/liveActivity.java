@@ -60,6 +60,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnResize;
 	private static TextView mNetInfoTv;
 	private CheckBox mMute;
+	private TextView mTextVersion;
 	
 	private LivePushConfig mLivePushConfig;
 	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
@@ -138,6 +139,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		
 		mMute=(CheckBox)findViewById(R.id.checkMute);
 		mMute.setOnCheckedChangeListener(this);
+		
+		mTextVersion = (TextView)findViewById(R.id.tv_version);
 				
 		list.add("none");    
 	    list.add("pic1");    
@@ -238,6 +241,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mFilterLevelBar = (SeekBar) findViewById(R.id.seekBar1);
         mFilterLevelBar.setOnSeekBarChangeListener(this);
         
+        String sv = LiveInterface.getInstance().getVersion();
+        mTextVersion.setText(sv);
+        
         mLivePushConfig = new LivePushConfig();
 		updatePushConfig();
 		mSurfaceView=(GLSurfaceView)findViewById(R.id.surfaceView1);
@@ -281,12 +287,33 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		// TODO Auto-generated method stub
 		super.onResume();
 		LiveInterface.getInstance().resume();
+		LiveInterface.getInstance().start(mRtmpUrl);
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		 if(mRecording)
+    	 {
+    		 LiveInterface.getInstance().stopRecord();
+    		 mBtnRecord.setText("record");
+    		 mRecording = false;
+    		 mText.setVisibility(View.INVISIBLE);
+    	 }
+//		 if(mPublishing)
+//		 {
+			 LiveInterface.getInstance().stop();
+//			 updateUI(false);
+//		 }
+		 if(mPlaying)
+		 {
+			 LiveInterface.getInstance().stopPlay();
+			 mBtnResize.setEnabled(false);
+			 mBtnPlay.setText("play");
+			 mPlaying = false;
+		 }
+		 mWatermark.setChecked(false);
 		LiveInterface.getInstance().uninit();
 	}
 
@@ -308,11 +335,11 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
     		 mRecording = false;
     		 mText.setVisibility(View.INVISIBLE);
     	 }
-		 if(mPublishing)
-		 {
-			 LiveInterface.getInstance().stop();
-			 updateUI(false);
-		 }
+//		 if(mPublishing)
+//		 {
+//			 LiveInterface.getInstance().stop();
+//			 updateUI(false);
+//		 }
 		 if(mPlaying)
 		 {
 			 LiveInterface.getInstance().stopPlay();
@@ -320,7 +347,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			 mBtnPlay.setText("play");
 			 mPlaying = false;
 		 }
-		 mWatermark.setChecked(false);
+		// mWatermark.setChecked(false);
+		 
 	}
 	
 	@Override
