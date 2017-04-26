@@ -288,6 +288,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		super.onResume();
 		LiveInterface.getInstance().resume();
 		LiveInterface.getInstance().start(mRtmpUrl);
+		mPublishing= true;
 	}
 
 	@Override
@@ -335,11 +336,12 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
     		 mRecording = false;
     		 mText.setVisibility(View.INVISIBLE);
     	 }
-//		 if(mPublishing)
-//		 {
-//			 LiveInterface.getInstance().stop();
-//			 updateUI(false);
-//		 }
+		 if(mPublishing)
+		 {
+			 LiveInterface.getInstance().stop();
+			 updateUI(false);
+			 mPublishing = false;
+		 }
 		 if(mPlaying)
 		 {
 			 LiveInterface.getInstance().stopPlay();
@@ -347,7 +349,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			 mBtnPlay.setText("play");
 			 mPlaying = false;
 		 }
-		// mWatermark.setChecked(false);
+		 mWatermark.setChecked(false);
 		 
 	}
 	
@@ -385,7 +387,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
          case R.id.btn_stop:
         	 LiveInterface.getInstance().stop();
         	 mPublishing = false;
-        	 //updateUI(false);
+        	 updateUI(false);
+        	
              break;
          case R.id.btn_switch:
         	 LiveInterface.getInstance().switchCamera();
