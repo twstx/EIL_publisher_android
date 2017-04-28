@@ -287,34 +287,12 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		// TODO Auto-generated method stub
 		super.onResume();
 		LiveInterface.getInstance().resume();
-		LiveInterface.getInstance().start(mRtmpUrl);
-		mPublishing= true;
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		 if(mRecording)
-    	 {
-    		 LiveInterface.getInstance().stopRecord();
-    		 mBtnRecord.setText("record");
-    		 mRecording = false;
-    		 mText.setVisibility(View.INVISIBLE);
-    	 }
-//		 if(mPublishing)
-//		 {
-			 LiveInterface.getInstance().stop();
-//			 updateUI(false);
-//		 }
-		 if(mPlaying)
-		 {
-			 LiveInterface.getInstance().stopPlay();
-			 mBtnResize.setEnabled(false);
-			 mBtnPlay.setText("play");
-			 mPlaying = false;
-		 }
-		 mWatermark.setChecked(false);
 		LiveInterface.getInstance().uninit();
 	}
 
