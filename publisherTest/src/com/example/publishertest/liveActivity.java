@@ -122,6 +122,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mBtnOpenPlay.setOnClickListener(this);
 		mBtnPlay = (Button) findViewById(R.id.btn_play);
 		mBtnPlay.setOnClickListener(this);
+		mBtnPlay.setEnabled(false);
 		mBtnResize = (Button) findViewById(R.id.btn_resize);
 		mBtnResize.setOnClickListener(this);
 		mBtnResize.setEnabled(false);
@@ -248,6 +249,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		updatePushConfig();
 		mSurfaceView=(GLSurfaceView)findViewById(R.id.surfaceView1);
 		LiveInterface.getInstance().init(mSurfaceView , mLivePushConfig);
+		
 	}
 	
 	protected void updatePic(int id) {
@@ -287,6 +289,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		// TODO Auto-generated method stub
 		super.onResume();
 		LiveInterface.getInstance().resume();
+		LiveInterface.getInstance().start(mRtmpUrl);
+		mPublishing = true;	
 	}
 
 	@Override
