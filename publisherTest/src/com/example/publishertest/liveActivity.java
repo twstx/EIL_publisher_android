@@ -2,8 +2,8 @@ package com.example.publishertest;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveEventInterface;
 import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveNetStateInterface;
+import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveEventInterface;
 import com.eil.eilpublisher.interfaces.LiveInterface;
 import com.eil.eilpublisher.liveConstants.LiveConstants;
 import com.eil.eilpublisher.media.LivePushConfig;
@@ -560,7 +560,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	{
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
 		Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
-		mLivePushConfig.setWatermark(watermarkImage,1000,100,200,100);
+		mLivePushConfig.setWatermark(watermarkImage,800,100,200,100);
 		mLivePushConfig.setRecordPath("/sdcard/");
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
 		mLivePushConfig.setAppContext(this);
@@ -572,9 +572,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setNetstateInterface(mPublishNetstateListener);
 		if(0 == mPicPos)
 		{
-			mLivePushConfig.setPlayerPosition(0, 180, 320, 180);
+			mLivePushConfig.setPlayerPosition(0, 200, 480, 270);
 		}else{
-			mLivePushConfig.setPlayerPosition(960, 180, 320, 180);
+			mLivePushConfig.setPlayerPosition(600, 200, 480, 270);
 		}
 		
 		if(0 == mEncodeMode)
