@@ -13,10 +13,10 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持固定横竖屏推流,视频方向自适应
 * [x] 支持前、后置摄像头动态切换
 * [x] 支持本地录像
-* [x] 支持水印
+* [x] 支持多水印（最多4个）
 * [x] 支持全局美颜滤镜
 * [x] 支持镜头变焦功能:变焦级别可设(需要取手机支持的摄像头变焦范围)
-* [x] 支持媒体输入功能:rtmp流输入画中画显示（目前只有横屏推流模式支持）
+* [x] 支持媒体输入功能:rtmp流输入画中画显示（目前只有横屏推流模式支持），画中画断线后自动重连
 * [x] 支持画中画画面切换功能
 * [x] 支持闪光灯开关功能
 * [x] 支持镜像推流功能
@@ -127,7 +127,8 @@ mLivePushConfig.setEventInterface(mCaptureStateListener);
 mLivePushConfig.setRecordPath("/sdcard/");
 //设置水印以及显示位置
 Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
-mLivePushConfig.setWatermark(watermarkImage,1000,100,200,200);
+mLivePushConfig.setWatermark(watermarkImage,100,100,200,200);
+mLivePushConfig.setWatermark(watermarkImage,800,100,200,100);
 //设置弱网优化开关
 mLivePushConfig.setWeaknetOptition(true);(true：打开；false：关闭）默认为打开状态
 //设置推流视频方向

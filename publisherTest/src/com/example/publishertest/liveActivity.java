@@ -54,7 +54,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private CheckBox mLight;
 	private CheckBox mMirror;
 	private TextView mText;
-	CheckBox mWatermark;
+	CheckBox mWatermark0;
+	CheckBox mWatermark1;
+	CheckBox mWatermark2;
+	CheckBox mWatermark3;
 	private Button mBtnOpenPlay;
 	private Button mBtnPlay;
 	private Button mBtnResize;
@@ -133,8 +136,14 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		
 		mText = (TextView)findViewById(R.id.tv);
 		mText.setVisibility(View.INVISIBLE);
-		mWatermark=(CheckBox)findViewById(R.id.checkBox1);
-		mWatermark.setOnCheckedChangeListener(this);
+		mWatermark0=(CheckBox)findViewById(R.id.checkBox1);
+		mWatermark0.setOnCheckedChangeListener(this);
+		mWatermark1=(CheckBox)findViewById(R.id.checkBox2);
+		mWatermark1.setOnCheckedChangeListener(this);
+		mWatermark2=(CheckBox)findViewById(R.id.checkBox3);
+		mWatermark2.setOnCheckedChangeListener(this);
+		mWatermark3=(CheckBox)findViewById(R.id.checkBox4);
+		mWatermark3.setOnCheckedChangeListener(this);
 		
 		mNetInfoTv=(TextView) findViewById(R.id.tv_net);
 		
@@ -202,10 +211,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		                        break;
 		                    case LiveConstants.PLAY_ERR_NET_DECODE_FAIL:
 		                    	showMessage("媒体输入打开失败");
-//		                    	LiveInterface.getInstance().stopPlay();
-		               		 	mBtnResize.setEnabled(false);
-		               		 	mBtnPlay.setText("play");
-		               		 	mPlaying = false; 
+		               		 	//mBtnResize.setEnabled(false);
+		               		 	//mBtnPlay.setText("play");
+		               		 	//mPlaying = false; 
 		                        break;
 		                    case LiveConstants.PUSH_ERR_OPEN_MIC_FAIL:
 		                    	updateUI(false);
@@ -331,8 +339,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			 mBtnPlay.setText("play");
 			 mPlaying = false;
 		 }
-		 mWatermark.setChecked(false);
-		 
+//		 mWatermark0.setChecked(false);
+//		 mWatermark1.setChecked(false);
+//		 mWatermark2.setChecked(false);
+//		 mWatermark3.setChecked(false);
 	}
 	
 	@Override
@@ -560,7 +570,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	{
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
 		Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
+		mLivePushConfig.setWatermark(watermarkImage,80,100,200,100);
 		mLivePushConfig.setWatermark(watermarkImage,800,100,200,100);
+		mLivePushConfig.setWatermark(watermarkImage,80,600,200,100);
+		mLivePushConfig.setWatermark(watermarkImage,800,600,200,100);
 		mLivePushConfig.setRecordPath("/sdcard/");
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
 		mLivePushConfig.setAppContext(this);
@@ -666,9 +679,30 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		{
 			case R.id.checkBox1:
 				 if(isChecked){ 
-					 LiveInterface.getInstance().setWaterMarkState(true);
+					 LiveInterface.getInstance().setWaterMarkState(true, 0);
 		         }else{ 
-		        	 LiveInterface.getInstance().setWaterMarkState(false);
+		        	 LiveInterface.getInstance().setWaterMarkState(false, 0);
+		         } 
+				 break;
+			case R.id.checkBox2:
+				 if(isChecked){ 
+					 LiveInterface.getInstance().setWaterMarkState(true, 1);
+		         }else{ 
+		        	 LiveInterface.getInstance().setWaterMarkState(false, 1);
+		         } 
+				 break;
+			case R.id.checkBox3:
+				 if(isChecked){ 
+					 LiveInterface.getInstance().setWaterMarkState(true, 2);
+		         }else{ 
+		        	 LiveInterface.getInstance().setWaterMarkState(false, 2);
+		         } 
+				 break;
+			case R.id.checkBox4:
+				 if(isChecked){ 
+					 LiveInterface.getInstance().setWaterMarkState(true, 3);
+		         }else{ 
+		        	 LiveInterface.getInstance().setWaterMarkState(false, 3);
 		         } 
 				 break;
 			case R.id.check_light:
