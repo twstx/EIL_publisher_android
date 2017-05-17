@@ -127,8 +127,8 @@ mLivePushConfig.setEventInterface(mCaptureStateListener);
 mLivePushConfig.setRecordPath("/sdcard/");
 //设置水印以及显示位置
 Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
-mLivePushConfig.setWatermark(watermarkImage,100,100,200,200);
-mLivePushConfig.setWatermark(watermarkImage,800,100,200,100);
+mLivePushConfig.setWatermark(watermarkImage,100,100,200,200);//设置水印资源、位置
+mLivePushConfig.setWatermark(watermarkImage,800,100,200,100，false);//设置水印资源、位置、是否透明
 //设置弱网优化开关
 mLivePushConfig.setWeaknetOptition(true);(true：打开；false：关闭）默认为打开状态
 //设置推流视频方向

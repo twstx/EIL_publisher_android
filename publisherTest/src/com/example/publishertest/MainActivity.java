@@ -24,13 +24,14 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 
 	public final static String TAG = "MainActivity";
 	private Button mBtnSetOK;
-	EditText mUrlText,mPlayUrlText;
-	public RadioButton mRadio480, mRadio360,mRadio720;
+	EditText mUrlText,mPlayUrlText,mTitleText;
+	public RadioButton mRadio480, mRadio360,mRadio720,mRadio1080;
 	public RadioButton mRadioEncHW, mRadioEncSW;
 	public RadioButton mPublishH, mPublishV;
 	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
 	private static String mPlayUrl = "http://10.0.60.99:8099/testroom13/test3/ss.mp4";
 //	private String mPlayUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
+	private String mTitle ="15¸ö×ÖÒÔÄÚ";
 	CheckBox mWeeknet,mAutoRotate;
 	private List<CheckBox> checkBoxs=new ArrayList<CheckBox>();
 	
@@ -48,6 +49,8 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 		
 		mPlayUrlText =(EditText)findViewById(R.id.editText2);
 		mPlayUrlText.setText(mPlayUrl.toCharArray(), 0, mPlayUrl.length());  
+		
+		mTitleText = (EditText)findViewById(R.id.editText3);
 		
 		RadioGroup groupencoder = (RadioGroup)this.findViewById(R.id.radioGroup);
 		mRadioEncHW =  (RadioButton) findViewById(R.id.radioHW);
@@ -82,6 +85,7 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 	    mRadio360 = (RadioButton) findViewById(R.id.radio360);
 		mRadio480 = (RadioButton) findViewById(R.id.radio480);
 		mRadio720 = (RadioButton) findViewById(R.id.radio720);
+		mRadio1080 = (RadioButton) findViewById(R.id.radio1080);
 		groupdefinition.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             
             @Override
@@ -93,6 +97,8 @@ public class MainActivity extends Activity implements OnClickListener, android.w
            		 liveActivity.setDefinitionMode(1);
            	 if(arg1 == mRadio720.getId())
            		liveActivity.setDefinitionMode(2);
+           	 if(arg1 == mRadio1080.getId())
+           	    liveActivity.setDefinitionMode(3);
             }
         });
 		
@@ -155,6 +161,9 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 		String playUrl="";  
 		playUrl=mPlayUrlText.getText().toString();
 		liveActivity.setPlayUrl(playUrl);
+		
+		liveActivity.setTitleText(mTitleText);
+		
 		Intent intent = new Intent();
 		intent.setClass(MainActivity.this,liveActivity.class);
 		startActivity(intent);

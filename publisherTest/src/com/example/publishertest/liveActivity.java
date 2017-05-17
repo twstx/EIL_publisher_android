@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -35,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -53,6 +55,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnRecord;
 	private CheckBox mLight;
 	private CheckBox mMirror;
+	private CheckBox mTitle;
 	private TextView mText;
 	CheckBox mWatermark0;
 	CheckBox mWatermark1;
@@ -91,7 +94,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
     private Spinner spinnerPic;
     private List<String> list = new ArrayList<String>();   
 
-	
+    static EditText mTitleText;
+    
 	public static final int PUBLISH_EVENTINFO_MSG=1;
 	public static final int PUBLISH_NETINFO_MSG=2;
 	
@@ -133,6 +137,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLight.setOnCheckedChangeListener(this);
 		mMirror = (CheckBox) findViewById(R.id.check_mirror);
 		mMirror.setOnCheckedChangeListener(this);
+		mTitle = (CheckBox) findViewById(R.id.cbTitle);
+		mTitle.setOnCheckedChangeListener(this);
 		
 		mText = (TextView)findViewById(R.id.tv);
 		mText.setVisibility(View.INVISIBLE);
@@ -263,6 +269,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	protected void updatePic(int id) {
 		// TODO Auto-generated method stub
 		 Bitmap picImage ;
+		 Resources r = this.getResources();
 		switch(id)
 		{
 		case 0:
@@ -273,17 +280,17 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			}			
 			break;
 		case 1:
-			picImage = BitmapFactory.decodeFile("/sdcard/tim1.jpg");
+			picImage = BitmapFactory.decodeResource(r, R.drawable.tim1);
     		LiveInterface.getInstance().startPic(picImage);
     		mPicturing = true;
 			break;
 		case 2:
-			picImage = BitmapFactory.decodeFile("/sdcard/tim2.jpg");
+			picImage = BitmapFactory.decodeResource(r, R.drawable.tim2);
     		LiveInterface.getInstance().startPic(picImage);
     		mPicturing = true;
 			break;
 		case 3:
-			picImage = BitmapFactory.decodeFile("/sdcard/tim3.jpg");
+			picImage = BitmapFactory.decodeResource(r, R.drawable.tim3);
     		LiveInterface.getInstance().startPic(picImage);
     		mPicturing = true;
 			break;
@@ -339,10 +346,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			 mBtnPlay.setText("play");
 			 mPlaying = false;
 		 }
-//		 mWatermark0.setChecked(false);
-//		 mWatermark1.setChecked(false);
-//		 mWatermark2.setChecked(false);
-//		 mWatermark3.setChecked(false);
+		 mWatermark0.setChecked(false);
+		 mWatermark1.setChecked(false);
+		 mWatermark2.setChecked(false);
+		 mWatermark3.setChecked(false);
 	}
 	
 	@Override
@@ -569,11 +576,15 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private void updatePushConfig()
 	{
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
-		Bitmap watermarkImage = BitmapFactory.decodeFile("/sdcard/mark.png");
+		Resources r = this.getResources();
+		Bitmap watermarkImage = BitmapFactory.decodeResource(r, R.drawable.mark);//BitmapFactory.decodeFile("/sdcard/mark.png");
 		mLivePushConfig.setWatermark(watermarkImage,80,100,200,100);
-		mLivePushConfig.setWatermark(watermarkImage,800,100,200,100);
-		mLivePushConfig.setWatermark(watermarkImage,80,600,200,100);
-		mLivePushConfig.setWatermark(watermarkImage,800,600,200,100);
+		Bitmap Image0 = BitmapFactory.decodeResource(r, R.drawable.erweima);
+		mLivePushConfig.setWatermark(Image0,800,100,200,200,false);
+		Bitmap Image1 = BitmapFactory.decodeResource(r, R.drawable.image3);
+		mLivePushConfig.setWatermark(Image1,100,700,200,200,false);
+		Bitmap Image2 = BitmapFactory.decodeResource(r, R.drawable.image1);
+		mLivePushConfig.setWatermark(Image2,800,600,200,200,false);
 		mLivePushConfig.setRecordPath("/sdcard/");
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
 		mLivePushConfig.setAppContext(this);
@@ -583,6 +594,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setVideoResolution(mPublishOrientation);
 		mLivePushConfig.setAutoRotation(mAutoRotate);
 		mLivePushConfig.setNetstateInterface(mPublishNetstateListener);
+		mLivePushConfig.setTextView(mTitleText);
 		if(0 == mPicPos)
 		{
 			mLivePushConfig.setPlayerPosition(0, 200, 480, 270);
@@ -639,6 +651,19 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 				mLivePushConfig.setVideoFPS(15);
 				mLivePushConfig.setVideoBitrate(1200);
 				break;	
+			case 3:
+//				mLivePushConfig.setDefinition(LivePushConfig.DEFINITION_SUPER);
+				if(0 == mPublishOrientation%2)
+				{
+					mLivePushConfig.setVideoSize(1920,1080);
+				}else
+				{
+					mLivePushConfig.setVideoSize(1080,1920);
+				}
+				
+				mLivePushConfig.setVideoFPS(15);
+				mLivePushConfig.setVideoBitrate(1800);
+				break;	
 		}		
 	}
 	
@@ -670,6 +695,11 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	public static void setAutoRotateState(boolean state)
 	{
 		mAutoRotate = state;
+	}
+	
+	public static void setTitleText(EditText tv)
+	{
+		mTitleText = tv;
 	}
 	
 	@Override
@@ -724,6 +754,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 					LiveInterface.getInstance().setMuteModeState(true);
 				}else{
 					LiveInterface.getInstance().setMuteModeState(false);
+				}
+				break;
+			case R.id.cbTitle:
+				if(isChecked){
+					LiveInterface.getInstance().setTitleMode(true);
+				}else{
+					LiveInterface.getInstance().setTitleMode(false);
 				}
 				break;
 			default:

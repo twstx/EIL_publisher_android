@@ -97,10 +97,10 @@
         android:weightSum="1" >
 
         <CheckBox
-            android:id="@+id/checkBox1"
+            android:id="@+id/cbTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="watermark" />
+            android:text="title" />
 
         <SeekBar
             android:id="@+id/seekBar1"
@@ -129,6 +129,12 @@
         android:orientation="horizontal"
         android:weightSum="1" >
 
+         <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="watermark" />
+         
         <CheckBox
             android:id="@+id/checkBox2"
             android:layout_width="wrap_content"
