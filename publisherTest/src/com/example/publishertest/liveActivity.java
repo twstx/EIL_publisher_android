@@ -66,6 +66,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnResize;
 	private static TextView mNetInfoTv;
 	private CheckBox mMute;
+	private CheckBox mBgm;
 	private TextView mTextVersion;
 	
 	private LivePushConfig mLivePushConfig;
@@ -155,6 +156,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		
 		mMute=(CheckBox)findViewById(R.id.checkMute);
 		mMute.setOnCheckedChangeListener(this);
+		mBgm=(CheckBox)findViewById(R.id.checkBgm);
+		mBgm.setOnCheckedChangeListener(this);
+		mBgm.setEnabled(false);
 		
 		mTextVersion = (TextView)findViewById(R.id.tv_version);
 				
@@ -326,6 +330,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 		 if(mRecording)
     	 {
     		 LiveInterface.getInstance().stopRecord();
@@ -343,6 +348,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		 {
 			 LiveInterface.getInstance().stopPlay();
 			 mBtnResize.setEnabled(false);
+			 mBgm.setChecked(false);
+			 mBgm.setEnabled(false);
 			 mBtnPlay.setText("play");
 			 mPlaying = false;
 		 }
@@ -381,10 +388,22 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		 case R.id.btn_start:
 			 LiveInterface.getInstance().start(mRtmpUrl);
 			 mPublishing = true;
-			
+			 if(0 == mPublishOrientation)
+			 {
+				 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			 }else{
+				 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			 }
+//			 for(int i = 0; i< 50; i++)
+//			 {
+//				 LiveInterface.getInstance().start(mRtmpUrl);
+//				
+//				 LiveInterface.getInstance().stop();
+//			 }
              break;
          case R.id.btn_stop:
         	 LiveInterface.getInstance().stop();
+        	 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         	 mPublishing = false;
         	 updateUI(false);
         	
@@ -415,12 +434,15 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         		 mBtnOpenPlay.setText("openPlay");
         		 mOpenPlaying = false;
         		 mBtnPlay.setEnabled(false);
+        		 mBgm.setChecked(false);
+        		 mBgm.setEnabled(false);
         	 }else
         	 {
         		 LiveInterface.getInstance().openPlay(mPlayUrl);
         		 mBtnOpenPlay.setText("closePlay");
         		 mOpenPlaying = true;
-        		 mBtnPlay.setEnabled(true);       		 
+        		 mBtnPlay.setEnabled(true);
+        		 mBgm.setEnabled(true);
         	 }
         	 
              break;
@@ -578,13 +600,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setRtmpUrl(mRtmpUrl);
 		Resources r = this.getResources();
 		Bitmap watermarkImage = BitmapFactory.decodeResource(r, R.drawable.mark);//BitmapFactory.decodeFile("/sdcard/mark.png");
-		mLivePushConfig.setWatermark(watermarkImage,80,100,200,100);
+		mLivePushConfig.setWatermark(watermarkImage,80,80,200,100);
 		Bitmap Image0 = BitmapFactory.decodeResource(r, R.drawable.erweima);
 		mLivePushConfig.setWatermark(Image0,800,100,200,200,false);
-		Bitmap Image1 = BitmapFactory.decodeResource(r, R.drawable.image3);
-		mLivePushConfig.setWatermark(Image1,100,700,200,200,false);
-		Bitmap Image2 = BitmapFactory.decodeResource(r, R.drawable.image1);
-		mLivePushConfig.setWatermark(Image2,800,600,200,200,false);
+//		Bitmap Image1 = BitmapFactory.decodeResource(r, R.drawable.image0);
+//		mLivePushConfig.setWatermark(Image1,100,700,200,200,false);
+//		Bitmap Image2 = BitmapFactory.decodeResource(r, R.drawable.image1);
+//		mLivePushConfig.setWatermark(Image2,800,600,200,200,false);
 		mLivePushConfig.setRecordPath("/sdcard/");
 		mLivePushConfig.setEventInterface(mCaptureStateListener);
 		mLivePushConfig.setAppContext(this);
@@ -594,13 +616,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setVideoResolution(mPublishOrientation);
 		mLivePushConfig.setAutoRotation(mAutoRotate);
 		mLivePushConfig.setNetstateInterface(mPublishNetstateListener);
-		mLivePushConfig.setTextView(mTitleText);
-		if(0 == mPicPos)
-		{
-			mLivePushConfig.setPlayerPosition(0, 200, 480, 270);
-		}else{
-			mLivePushConfig.setPlayerPosition(600, 200, 480, 270);
-		}
+
+//		if(0 == mPicPos)
+//		{
+		mLivePushConfig.setPlayerPosition(200, 200, 640, 360);
+//		}else{
+//			mLivePushConfig.setPlayerPosition(600, 200, 480, 270);
+//		}
 		
 		if(0 == mEncodeMode)
 		{
@@ -705,6 +727,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		// TODO Auto-generated method stub
+		Resources r = this.getResources();
 		switch(buttonView.getId())
 		{
 			case R.id.checkBox1:
@@ -722,17 +745,19 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		         } 
 				 break;
 			case R.id.checkBox3:
-				 if(isChecked){ 
-					 LiveInterface.getInstance().setWaterMarkState(true, 2);
+				 if(isChecked){
+					Bitmap Image1 = BitmapFactory.decodeResource(r, R.drawable.image0);
+					 LiveInterface.getInstance().showWaterMark(Image1,100,700,200,200,false, 2);
 		         }else{ 
-		        	 LiveInterface.getInstance().setWaterMarkState(false, 2);
+		        	 LiveInterface.getInstance().hideWaterMark( 2);
 		         } 
 				 break;
 			case R.id.checkBox4:
 				 if(isChecked){ 
-					 LiveInterface.getInstance().setWaterMarkState(true, 3);
+					Bitmap Image2 = BitmapFactory.decodeResource(r, R.drawable.image1);
+					 LiveInterface.getInstance().showWaterMark(Image2,800,600,200,200,false, 3);
 		         }else{ 
-		        	 LiveInterface.getInstance().setWaterMarkState(false, 3);
+		        	 LiveInterface.getInstance().hideWaterMark( 3);
 		         } 
 				 break;
 			case R.id.check_light:
@@ -758,11 +783,21 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 				break;
 			case R.id.cbTitle:
 				if(isChecked){
-					LiveInterface.getInstance().setTitleMode(true);
+					mTitleText.setDrawingCacheEnabled(true);
+					Bitmap mTitleBmp = Bitmap.createBitmap(mTitleText.getDrawingCache());
+					LiveInterface.getInstance().showTitle(mTitleBmp,200, 600, 800, 200);
+					mTitleText.setDrawingCacheEnabled(false);
 				}else{
-					LiveInterface.getInstance().setTitleMode(false);
+					LiveInterface.getInstance().hideTitle();
 				}
 				break;
+			case R.id.checkBgm:
+				if(isChecked){
+					Bitmap bgm = BitmapFactory.decodeResource(this.getResources(), R.drawable.bgm2);
+	        		LiveInterface.getInstance().showPlayerBg(bgm,185,185,670,390);
+				}else{
+					LiveInterface.getInstance().hidePlayerBg();
+				}
 			default:
 				break;
 		}

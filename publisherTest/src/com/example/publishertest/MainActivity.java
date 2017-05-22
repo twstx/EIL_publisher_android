@@ -29,8 +29,8 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 	public RadioButton mRadioEncHW, mRadioEncSW;
 	public RadioButton mPublishH, mPublishV;
 	private String mRtmpUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
-	private static String mPlayUrl = "http://10.0.60.99:8099/testroom13/test3/ss.mp4";
-//	private String mPlayUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
+//	private static String mPlayUrl = "http://10.0.60.99:8099/testroom13/test3/ss.mp4";
+	private String mPlayUrl ="rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
 	private String mTitle ="15个字以内";
 	CheckBox mWeeknet,mAutoRotate;
 	private List<CheckBox> checkBoxs=new ArrayList<CheckBox>();
@@ -162,6 +162,15 @@ public class MainActivity extends Activity implements OnClickListener, android.w
 		playUrl=mPlayUrlText.getText().toString();
 		liveActivity.setPlayUrl(playUrl);
 		
+		String title="";  
+		title=mTitleText.getText().toString();
+		if(title.length() >= 15){
+			Toast toast = Toast.makeText(this, 
+					 "字数请少于15",                     
+	                 Toast.LENGTH_SHORT);                  
+			  	 toast.show();
+			return;
+		}
 		liveActivity.setTitleText(mTitleText);
 		
 		Intent intent = new Intent();

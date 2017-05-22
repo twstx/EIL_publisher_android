@@ -24,6 +24,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持静音功能
 * [x] 支持预览画面横竖屏切换
 * [x] 支持图片导播
+* [x] 支持文字贴图、画中画背景贴图
 
 二. 运行环境
 
@@ -279,6 +280,22 @@ LiveInterface.getInstance().stopPlay();
 -------- 画中画窗口切换
 ````java
 LiveInterface.getInstance().resize();
+````
+-------- 显示文字贴图
+````java
+LiveInterface.getInstance().showTitle(mTitleBmp,200, 600, 800, 200);
+````
+-------- 隐藏文字贴图
+````java
+LiveInterface.getInstance().hideTitle();
+````
+-------- 显示画中画背景贴图
+````java
+LiveInterface.getInstance().showPlayerBg(bgm,185,185,670,390);
+````
+-------- 隐藏画中画背景贴图
+````java
+LiveInterface.getInstance().hidePlayerBg();
 ````
 -------- 停止推流
 ````java

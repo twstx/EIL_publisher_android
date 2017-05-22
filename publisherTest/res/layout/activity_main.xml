@@ -222,6 +222,6 @@
 		    android:textColor="#ff0000" 
 		    android:maxLength="15" 
 		    android:singleLine="true"    
-		    android:hint="这里的山路十八弯"  />
+		    android:hint="请输入...(15字以内)"  />
     </LinearLayout>    
 </RelativeLayout>
