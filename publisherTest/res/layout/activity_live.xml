@@ -48,11 +48,11 @@
             android:layout_height="wrap_content"
             android:text="record" />
 
-        <CheckBox
-            android:id="@+id/check_light"
+        <Button
+            android:id="@+id/btn_snapshot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="light" />
+            android:text="snapshot" />
 
     </LinearLayout>
 
@@ -179,6 +179,12 @@
             android:layout_height="wrap_content"
             android:text="画中画边框" />    
 
+          <CheckBox
+            android:id="@+id/check_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="light" />
+          
         <Spinner
             android:id="@+id/spinner1"
             android:layout_width="wrap_content"

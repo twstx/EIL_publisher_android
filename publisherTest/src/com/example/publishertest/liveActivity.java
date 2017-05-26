@@ -15,13 +15,20 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ImageFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.media.AudioFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextPaint;
+import android.util.Base64;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -53,6 +60,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private Button mBtnStopLive;
 	private Button mBtnSwitchCam;
 	private Button mBtnRecord;
+	private Button mBtnSnapshot;
 	private CheckBox mLight;
 	private CheckBox mMirror;
 	private CheckBox mTitle;
@@ -70,8 +78,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	private TextView mTextVersion;
 	
 	private LivePushConfig mLivePushConfig;
-	static String mRtmpUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy1";
-	static String mPlayUrl = "rtmp://rtmppush.ejucloud.com/ehoush/liuy2";
+	static String mRtmpUrl = "";
+	static String mPlayUrl = "";
 	static int mDefinitionMode = 0;//Ä¬ÈÏ480·Ö±æ
 	static int mEncodeMode = 1;//Ä¬ÈÏÓ²±àÂë
 	private boolean mRecording = false;
@@ -126,6 +134,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mBtnSwitchCam.setOnClickListener(this);
 		mBtnRecord = (Button) findViewById(R.id.btn_record);
 		mBtnRecord.setOnClickListener(this);
+		mBtnSnapshot = (Button) findViewById(R.id.btn_snapshot);
+		mBtnSnapshot.setOnClickListener(this);
 		mBtnOpenPlay = (Button) findViewById(R.id.btn_openPlay);
 		mBtnOpenPlay.setOnClickListener(this);
 		mBtnPlay = (Button) findViewById(R.id.btn_play);
@@ -467,6 +477,13 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         		 LiveInterface.getInstance().resize();
         	 }
         	 break;
+         case R.id.btn_snapshot:        	 
+        	 String name = LiveInterface.getInstance().takePhoto();
+        	 if(name != null)
+        	 {
+        		 showMessage(name);
+        	 }
+        	 break;
 		 }
 	}
 
@@ -620,9 +637,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 //		if(0 == mPicPos)
 //		{
 		mLivePushConfig.setPlayerPosition(200, 200, 640, 360);
-//		}else{
-//			mLivePushConfig.setPlayerPosition(600, 200, 480, 270);
-//		}
+		Bitmap bgm = BitmapFactory.decodeResource(r, R.drawable.bgm);
+		mLivePushConfig.setPlayerBgm(bgm,185,185,670,390);
+		mLivePushConfig.setmSnapshotPath("/sdcard/");
 		
 		if(0 == mEncodeMode)
 		{
@@ -783,10 +800,8 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 				break;
 			case R.id.cbTitle:
 				if(isChecked){
-					mTitleText.setDrawingCacheEnabled(true);
-					Bitmap mTitleBmp = Bitmap.createBitmap(mTitleText.getDrawingCache());
-					LiveInterface.getInstance().showTitle(mTitleBmp,200, 600, 800, 200);
-					mTitleText.setDrawingCacheEnabled(false);
+					String text = mTitleText.getText().toString();
+					LiveInterface.getInstance().showTitle(text,180, 600, 800, 200);
 				}else{
 					LiveInterface.getInstance().hideTitle();
 				}

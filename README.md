@@ -25,6 +25,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持预览画面横竖屏切换
 * [x] 支持图片导播
 * [x] 支持文字贴图、画中画背景贴图
+* [x] 支持快照功能
 
 二. 运行环境
 
@@ -138,6 +139,8 @@ mLivePushConfig.setVideoResolution(mPublishOrientation);（0：横屏；1：竖�
 mLivePushConfig.setAutoRotation(true);(true：打开；false：关闭 )默认为关闭状态
 //设置画中画显示位置
 mLivePushConfig.setPlayerPosition(960, 180, 320, 180);
+//设置截图路径
+mLivePushConfig.setmSnapshotPath("/sdcard/");
 // 创建LivePushConfig对象
 LivePushConfig mLivePushConfig = new LivePushConfig();
 ````
@@ -292,6 +295,10 @@ LiveInterface.getInstance().hideTitle();
 -------- 显示画中画背景贴图
 ````java
 LiveInterface.getInstance().showPlayerBg(bgm,185,185,670,390);
+````
+-------- 截图
+````java
+LiveInterface.getInstance().takePhoto();
 ````
 -------- 隐藏画中画背景贴图
 ````java
