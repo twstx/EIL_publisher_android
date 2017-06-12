@@ -15,14 +15,14 @@
 
 
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_weight="1"
         android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:weightSum="1"
-            android:layout_weight="1"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" > 
+        android:weightSum="1" >
 
         <Button
 	        android:id="@+id/btn_start"
@@ -56,12 +56,12 @@
 
     </LinearLayout>
 
-     <LinearLayout
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_weight="1"
         android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:weightSum="1"
-            android:layout_weight="1" >
+        android:weightSum="1" >
 
          <Button
              android:id="@+id/btn_openPlay"
@@ -216,5 +216,74 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/tv_net"
             android:textColor="#ff0000" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tv_net"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cbFBO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FBO" />
+
+        <SeekBar
+            android:id="@+id/seekBar2"
+            android:layout_width="255dp"
+            android:layout_height="wrap_content"
+            android:max="100" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1"
+        android:orientation="horizontal" >
+
+       <RadioGroup
+            android:id="@+id/filterGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:contentDescription="滤镜" >
+            
+        <RadioButton
+            android:id="@+id/smooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="磨皮" />
+
+        <RadioButton
+            android:id="@+id/whiten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="美白" />
+        
+         <RadioButton
+            android:id="@+id/pinky"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="粉嫩" />
+
+        <RadioButton
+            android:id="@+id/romantic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="浪漫" />
+        
+         <RadioButton
+            android:id="@+id/manhattan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文艺" />
+     
+         </RadioGroup>
+      
+    </LinearLayout>
 
 </RelativeLayout>

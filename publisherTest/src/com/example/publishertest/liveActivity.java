@@ -2,11 +2,13 @@ package com.example.publishertest;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveNetStateInterface;
 import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveEventInterface;
+import com.eil.eilpublisher.interfaces.LiveCallbackInterface.LiveNetStateInterface;
+import com.eil.eilpublisher.interfaces.LiveCallbackInterface.liveSurfaceTextureCallback;
 import com.eil.eilpublisher.interfaces.LiveInterface;
 import com.eil.eilpublisher.liveConstants.LiveConstants;
 import com.eil.eilpublisher.media.LivePushConfig;
+import com.eju.beautynfilters.gles.FBO;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -44,6 +46,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -51,7 +55,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class liveActivity extends Activity implements OnClickListener, OnCheckedChangeListener,OnSeekBarChangeListener{
+public class liveActivity extends Activity implements OnClickListener, OnCheckedChangeListener,OnSeekBarChangeListener, liveSurfaceTextureCallback{
 
 	public final static String TAG = "LiveActivity";
 	private GLSurfaceView mSurfaceView;
@@ -108,6 +112,12 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	public static final int PUBLISH_EVENTINFO_MSG=1;
 	public static final int PUBLISH_NETINFO_MSG=2;
 	
+	//自定义美颜
+	private FBO mFBO = new FBO();
+	private boolean mFBOopen = true;
+	CheckBox mFBOCheck;
+	public RadioButton mSmooth, mWhiten,mPinky,mRomantic,mManhattan;
+	private SeekBar mLevelBar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -272,6 +282,70 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         
         String sv = LiveInterface.getInstance().getVersion();
         mTextVersion.setText(sv);
+        
+        mFBOCheck=(CheckBox)findViewById(R.id.cbFBO);
+        mFBOCheck.setOnCheckedChangeListener(this);
+        
+        mLevelBar = (SeekBar) findViewById(R.id.seekBar2);
+        mLevelBar.setOnSeekBarChangeListener(this);
+        RadioGroup groupFilter = (RadioGroup)this.findViewById(R.id.filterGroup);
+        mSmooth =  (RadioButton) findViewById(R.id.smooth);
+        mWhiten =  (RadioButton) findViewById(R.id.whiten);
+        mPinky =  (RadioButton) findViewById(R.id.pinky);
+        mRomantic =  (RadioButton) findViewById(R.id.romantic);
+        mManhattan =  (RadioButton) findViewById(R.id.manhattan);
+		
+        //绑定一个匿名监听器
+        groupFilter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+             
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				// TODO Auto-generated method stub
+				if(mFBOopen)
+				{
+					if(checkedId == mSmooth.getId())
+					{
+						mFBO.smoothEnable = true;
+						mFBO.whitenEnable = false;
+						mFBO.pinkyEnable = false;
+						mFBO.romanticEnable = false;
+						mFBO.manhattanEnable = false;
+					}						
+	            	if(checkedId == mWhiten.getId())
+	            	{
+						mFBO.smoothEnable = false;
+						mFBO.whitenEnable = true;
+						mFBO.pinkyEnable = false;
+						mFBO.romanticEnable = false;
+						mFBO.manhattanEnable = false;
+					}	
+	            	if(checkedId == mPinky.getId())
+	            	{
+						mFBO.smoothEnable = false;
+						mFBO.whitenEnable = false;
+						mFBO.pinkyEnable = true;
+						mFBO.romanticEnable = false;
+						mFBO.manhattanEnable = false;
+					}	
+	            	if(checkedId == mRomantic.getId())
+	            	{
+						mFBO.smoothEnable = false;
+						mFBO.whitenEnable = false;
+						mFBO.pinkyEnable = false;
+						mFBO.romanticEnable = true;
+						mFBO.manhattanEnable = false;
+					}	
+	            	if(checkedId == mManhattan.getId())
+	            	{
+						mFBO.smoothEnable = false;
+						mFBO.whitenEnable = false;
+						mFBO.pinkyEnable = false;
+						mFBO.romanticEnable = false;
+						mFBO.manhattanEnable = true;
+					}	
+				}  
+			}
+         });
         
         mLivePushConfig = new LivePushConfig();
 		updatePushConfig();
@@ -619,7 +693,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		Bitmap watermarkImage = BitmapFactory.decodeResource(r, R.drawable.mark);//BitmapFactory.decodeFile("/sdcard/mark.png");
 		mLivePushConfig.setWatermark(watermarkImage,80,80,200,100);
 		Bitmap Image0 = BitmapFactory.decodeResource(r, R.drawable.erweima);
-		mLivePushConfig.setWatermark(Image0,800,100,200,200,false);
+		mLivePushConfig.setWatermark(Image0,600,100,200,200,false);
 //		Bitmap Image1 = BitmapFactory.decodeResource(r, R.drawable.image0);
 //		mLivePushConfig.setWatermark(Image1,100,700,200,200,false);
 //		Bitmap Image2 = BitmapFactory.decodeResource(r, R.drawable.image1);
@@ -633,12 +707,10 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setVideoResolution(mPublishOrientation);
 		mLivePushConfig.setAutoRotation(mAutoRotate);
 		mLivePushConfig.setNetstateInterface(mPublishNetstateListener);
-
-//		if(0 == mPicPos)
-//		{
+		mLivePushConfig.setSurfaceTextureCallback(this);
 		mLivePushConfig.setPlayerPosition(200, 200, 640, 360);
-		Bitmap bgm = BitmapFactory.decodeResource(r, R.drawable.bgm);
-		mLivePushConfig.setPlayerBgm(bgm,185,185,670,390);
+//		Bitmap bgm = BitmapFactory.decodeResource(r, R.drawable.bgm);
+//		mLivePushConfig.setPlayerBgm(bgm,185,185,670,390);
 		mLivePushConfig.setmSnapshotPath("/sdcard/");
 		
 		if(0 == mEncodeMode)
@@ -764,7 +836,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			case R.id.checkBox3:
 				 if(isChecked){
 					Bitmap Image1 = BitmapFactory.decodeResource(r, R.drawable.image0);
-					 LiveInterface.getInstance().showWaterMark(Image1,100,700,200,200,false, 2);
+					 LiveInterface.getInstance().showWaterMark(Image1,100,500,200,200,false, 2);
 		         }else{ 
 		        	 LiveInterface.getInstance().hideWaterMark( 2);
 		         } 
@@ -772,7 +844,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			case R.id.checkBox4:
 				 if(isChecked){ 
 					Bitmap Image2 = BitmapFactory.decodeResource(r, R.drawable.image1);
-					 LiveInterface.getInstance().showWaterMark(Image2,800,600,200,200,false, 3);
+					LiveInterface.getInstance().showWaterMark(Image2,500,500,200,200,false, 3);
 		         }else{ 
 		        	 LiveInterface.getInstance().hideWaterMark( 3);
 		         } 
@@ -801,7 +873,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			case R.id.cbTitle:
 				if(isChecked){
 					String text = mTitleText.getText().toString();
-					LiveInterface.getInstance().showTitle(text,180, 600, 800, 200);
+					LiveInterface.getInstance().showTitle(text,180, 500, 400, 200);
 				}else{
 					LiveInterface.getInstance().hideTitle();
 				}
@@ -813,6 +885,18 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 				}else{
 					LiveInterface.getInstance().hidePlayerBg();
 				}
+				break;
+			case R.id.cbFBO:
+				if(isChecked){
+					LiveInterface.getInstance().setFilterMode(1);
+					mFBO.enabled = true;
+					mFBOopen = true;
+				}else{
+					LiveInterface.getInstance().setFilterMode(0);
+					mFBO.enabled = false;
+					mFBOopen = false;
+				}
+				break;
 			default:
 				break;
 		}
@@ -835,7 +919,14 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		// TODO Auto-generated method stub
-		LiveInterface.getInstance().setFilterLevel(progress);
+		if(seekBar == mFilterLevelBar)
+		{
+			LiveInterface.getInstance().setFilterLevel(progress);
+		}
+		if(seekBar == mLevelBar)
+		{
+			mFBO.setBeautyLevel(progress/100.0f);
+		}
 	}
 
 	@Override
@@ -891,8 +982,40 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		}  
 		return true;		
 	}
+
 	public static void setPlayUrl(String playUrl) {
 		// TODO Auto-generated method stub
 		mPlayUrl = playUrl;
+	}
+
+	@Override
+	public void onSurfaceCreated() {
+		// TODO Auto-generated method stub
+		 mFBO.initialize(this);
+	}
+
+	@Override
+	public void onSurfaceChanged(int var1, int var2) {
+		// TODO Auto-generated method stub
+		 mFBO.updateSurfaceSize(var1, var2);
+		 Log.i(TAG, "onSurfaceChanged " + "texWidth:" + var1 + " texHeight:" + var2);
+	}
+
+	 @Override
+	 public void onSurfaceDestroyed() {
+	     Log.i(TAG, "onSurfaceDestroyed");
+	     mFBO.release();
+	}
+	 
+	@Override
+	public int onDrawFrame(int var1, int var2, int var3, float[] var4) {
+		// TODO Auto-generated method stub
+		if(var2 <= 0 || var3 <= 0)
+		{
+			Log.i(TAG, "onDrawFrame texId:" + var1 + ",texWidth:" + var2 + ",texHeight:" + var3);
+		}
+		int newTexId = mFBO.drawFrame(var1, var2, var3, var4);
+       Log.i(TAG, "onDrawFrame texId:" + var1 + ",newTexId:" + newTexId + ",texWidth:" + var2 + ",texHeight:" + var3);
+        return newTexId;
 	}  
 }

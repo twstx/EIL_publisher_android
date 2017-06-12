@@ -26,6 +26,7 @@ EIL_publisher_android SDK是Android 平台上使用的软件开发工具包(SDK)
 * [x] 支持图片导播
 * [x] 支持文字贴图、画中画背景贴图
 * [x] 支持快照功能
+* [x] 支持自定义滤镜
 
 二. 运行环境
 
@@ -184,7 +185,40 @@ LiveNetStateInterface mPublishNetstateListener = new LiveNetStateInterface() 可
 		}
     	
     };
-	
+- 创建推流数据源回调，可以收到实时数据。
+mLivePushConfig.setSurfaceTextureCallback(this);
+- 设置滤镜选择
+LiveInterface.getInstance().setFilterMode(1);//0为关闭自定义滤镜 1为开启自定义滤镜
+- 数据回调
+四个回调均执行在 GL rendering thread；如果 onDrawFrame 直接返回 texId，代表放弃 filter 处理，
+否则 onDrawFrame 应该返回一个 filter 算法处理过的纹理 id； 自定义的 newTexId，即 onDrawFrame 返回的纹理 id，必须是 GLES20.GL_TEXTURE_2D 类型；
+@Override
+	public void onSurfaceCreated() {
+		// TODO Auto-generated method stub
+		自定义滤镜初始化
+	}
+
+	@Override
+	public void onSurfaceChanged(int var1, int var2) {
+		// TODO Auto-generated method stub
+		宽高改变通知
+		 Log.i(TAG, "onSurfaceChanged " + "texWidth:" + var1 + " texHeight:" + var2);
+	}
+
+	 @Override
+	 public void onSurfaceDestroyed() {
+	     Log.i(TAG, "onSurfaceDestroyed");
+	    自定义滤镜销毁
+	}
+	 
+	@Override
+	public int onDrawFrame(int texId, int width, int height, float[] Matrix) {
+		// TODO Auto-generated method stub
+		实时数据回调
+		
+       Log.i(TAG, "onDrawFrame texId:" + var1 + ",newTexId:" + newTexId + ",texWidth:" + var2 + ",texHeight:" + var3);
+        return newTexId;
+	}  	
 ````
 -------- 初始化推流，开启摄像头
 ````java
