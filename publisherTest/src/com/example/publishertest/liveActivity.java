@@ -263,6 +263,9 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		                    case LiveConstants.PUSH_ERR_NET_RECONNECT_SUCC:
 		                    	showMessage("重连成功");
 		                    	break;
+		                    case LiveConstants.PLAY_EVT_VIDEO_END:
+		                    	showMessage("媒体输入播放结束");
+		                    	break;
 		                    default:
 		                        break;
 	    				 }
@@ -663,6 +666,11 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
                 	msg.obj = LiveConstants.PUSH_ERR_NET_RECONNECT_FAIL;
                 	msg.sendToTarget();
                 	break;
+                case LiveConstants.PLAY_EVT_VIDEO_END: //媒体输入打开失败
+                	Log.i(TAG, "LiveEventInterface player end");
+                	msg.obj = LiveConstants.PLAY_EVT_VIDEO_END;
+                	msg.sendToTarget();
+                    break; 
             }
         }
     };
@@ -873,7 +881,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			case R.id.cbTitle:
 				if(isChecked){
 					String text = mTitleText.getText().toString();
-					LiveInterface.getInstance().showTitle(text,180, 500, 400, 200);
+					LiveInterface.getInstance().showTitle(text,180, 500, 400, 200,Color.GREEN,30);
 				}else{
 					LiveInterface.getInstance().hideTitle();
 				}
