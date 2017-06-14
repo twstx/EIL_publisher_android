@@ -542,7 +542,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
         		 mPlaying = false; 
         	 }else
         	 {
-        		 LiveInterface.getInstance().startPlay();
+        		 LiveInterface.getInstance().startPlay(mPlayUrl);
         		 mBtnResize.setEnabled(true);
         		 mBtnPlay.setText("stopPlay");
         		 mPlaying = true;
@@ -716,9 +716,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 		mLivePushConfig.setAutoRotation(mAutoRotate);
 		mLivePushConfig.setNetstateInterface(mPublishNetstateListener);
 		mLivePushConfig.setSurfaceTextureCallback(this);
-		mLivePushConfig.setPlayerPosition(200, 200, 640, 360);
-//		Bitmap bgm = BitmapFactory.decodeResource(r, R.drawable.bgm);
-//		mLivePushConfig.setPlayerBgm(bgm,185,185,670,390);
+		mLivePushConfig.setPlayerPosition(200, 200, 320, 200);
 		mLivePushConfig.setmSnapshotPath("/sdcard/");
 		
 		if(0 == mEncodeMode)
@@ -889,7 +887,7 @@ public class liveActivity extends Activity implements OnClickListener, OnChecked
 			case R.id.checkBgm:
 				if(isChecked){
 					Bitmap bgm = BitmapFactory.decodeResource(this.getResources(), R.drawable.bgm2);
-	        		LiveInterface.getInstance().showPlayerBg(bgm,185,185,670,390);
+	        		LiveInterface.getInstance().showPlayerBg(bgm,195,195,330,210);
 				}else{
 					LiveInterface.getInstance().hidePlayerBg();
 				}
